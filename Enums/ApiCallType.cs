@@ -1,0 +1,5 @@
+﻿enum ApiCallType
+{
+    games,
+    developers
+}

@@ -43,7 +43,7 @@
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" Width="200"
                              IsChecked="True"
-                             Command="{Binding HomeViewCommand}"/>
+                             Command="{Binding HomeViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Search"
                              Height="50"
                              Foreground="White"
@@ -55,19 +55,19 @@
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" Width="200"
-                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked"/>
+                             Command="{Binding NewestGamesViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Top Rated Games"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" Width="200"
-                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked"/>
+                             Command="{Binding TopGamesViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Hottest Games"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" Width="200"
-                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked"/>
+                             Command="{Binding HottestGamesViewCommand}" Checked="RadioButton_Checked"/>
             </StackPanel>
 
             <TextBox Width="250"

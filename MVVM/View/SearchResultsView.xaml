@@ -4,10 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GameGizmo.MVVM.View"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Background="#1B1B1B">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ui:ListView Name="DefaultListView" 
+              ItemsSource="{Binding GameList}">
+        <ui:ListView.View>
+            <ui:GridView x:Name="DefaultGridView">
+                <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
+                <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
+                <GridViewColumn Width="Auto" Header="Released" DisplayMemberBinding="{Binding Path=released}" />
+                <GridViewColumn Width="Auto" Header="Rating" DisplayMemberBinding="{Binding Path=rating}">
+                </GridViewColumn>
+            </ui:GridView>
+        </ui:ListView.View>
+    </ui:ListView>
 </UserControl>

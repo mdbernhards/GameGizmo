@@ -1,4 +1,5 @@
 ﻿using GameGizmo.Core;
+using GameGizmo.Models;
 using GameGizmo.MVVM.View;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,12 @@ namespace GameGizmo.MVVM.ViewModel
         public RelayCommand HomeViewCommand { get; set; }
 
         public RelayCommand SearchResultsViewCommand { get; set; }
+
+        public RelayCommand TopGamesViewCommand { get; set; }
+
+        public RelayCommand NewestGamesViewCommand { get; set; }
+
+        public RelayCommand HottestGamesViewCommand { get; set; }
 
         private object? _currentView;
 
@@ -45,6 +52,25 @@ namespace GameGizmo.MVVM.ViewModel
             SearchResultsViewCommand = new RelayCommand(x =>
             {
                 CurrentView = SearchResults;
+                SearchResults.GetGameList(GameListType.Other);
+            });
+
+            TopGamesViewCommand = new RelayCommand(x =>
+            {
+                CurrentView = SearchResults;
+                SearchResults.GetGameList(GameListType.TopGamesOfAllTime);
+            });
+
+            NewestGamesViewCommand = new RelayCommand(x =>
+            {
+                CurrentView = SearchResults;
+                SearchResults.GetGameList(GameListType.NewestGames);
+            });
+
+            HottestGamesViewCommand = new RelayCommand(x =>
+            {
+                CurrentView = SearchResults;
+                SearchResults.GetGameList(GameListType.HottestGames);
             });
         }
     }
