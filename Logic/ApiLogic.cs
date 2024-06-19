@@ -1,15 +1,6 @@
 ﻿using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
-using Wpf.Ui.Controls;
-using Wpf.Ui.Extensions;
 
 namespace GameGizmo.Logic
 {
@@ -26,59 +17,92 @@ namespace GameGizmo.Logic
             Client = new();
         }
 
-        public async Task<Game> Test()
+        public async Task<ListOfGames?> Test()
         {
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, path);
             var response = await Client.SendAsync(requestMessage);
 
-            var result = await response.Content.ReadAsAsync<Game>();
+            var result = await response.Content.ReadAsAsync<ListOfGames?>();
             return result;
         }
 
-        public async Task<Game> GetHighestRatedGames()
+        public async Task<ListOfGames?> GetHighestRatedGames()
         {
             var parameters = new ApiGameParameters
             {
                 pageNumber = 1,
-                pageSize = 30,
+                pageSize = 15,
                 ordering = "-metacritic"
             };
 
-            return await GameQuery(parameters);
+            return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<Game> GetNewestGames()
+        public async Task<ListOfGames?> GetNewestGames()
         {
             var parameters = new ApiGameParameters
             {
                 pageNumber = 1,
-                pageSize = 30,
+                pageSize = 15,
                 ordering = "added"
             };
 
-            return await GameQuery(parameters);
+            return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<Game> GetHottestGames()
+        public async Task<ListOfGames?> GetHottestGames()
         {
             var parameters = new ApiGameParameters
             {
                 pageNumber = 1,
-                pageSize = 30,
+                pageSize = 15,
                 dates = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "," + DateTime.Now.ToString("yyyy-MM-dd"),
                 ordering = "-added"
             };
 
-            return await GameQuery(parameters);
+            return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<Game> GameQuery(ApiGameParameters parameters)
+        public async Task<ListOfGames?> GetSimpleSearch(string? searchQuerry)
         {
-                var requestMessage = new HttpRequestMessage(HttpMethod.Get, CreateUri(parameters));
-                var response = await Client.SendAsync(requestMessage);
+            var parameters = new ApiGameParameters
+            {
+                pageNumber = 1,
+                pageSize = 15,
+                ordering = "-added",
+                searchQuery = searchQuerry
+            };
 
-                var result = await response.Content.ReadAsAsync<Game>();
-                return result;
+            return await ListOfGamesQuery(parameters);
+        }
+
+        public async Task<ListOfGames?> ListOfGamesQuery(ApiGameParameters parameters)
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(CreateUri(parameters));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var result = await response.Content.ReadAsAsync<ListOfGames?>();
+            return result;
+        }
+
+        public async Task<Game?> GameQuery(int? gameId)
+        {
+            string query = $"https://api.rawg.io/api/games/" + gameId + $"?key=a84e3588362f461a95f7e1d63069c9b5";
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var result = await response.Content.ReadAsAsync<Game?>();
+            return result;
         }
 
         private Uri CreateUri(ApiGameParameters parameters)

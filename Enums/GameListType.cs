@@ -3,5 +3,6 @@
     TopGamesOfAllTime,
     NewestGames,
     HottestGames,
+    SimpleSearch,
     Other
 }

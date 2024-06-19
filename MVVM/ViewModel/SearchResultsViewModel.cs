@@ -1,13 +1,10 @@
-﻿using GameGizmo.Core;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using GameGizmo.Core;
 using GameGizmo.Logic;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace GameGizmo.MVVM.ViewModel
 {
@@ -17,9 +14,9 @@ namespace GameGizmo.MVVM.ViewModel
 
         public ObservableCollection<Model.Result> GameList { get; set; } = [];
 
-        public SearchResultsViewModel()
+        public SearchResultsViewModel(ApiLogic apiLogic)
         {
-            ApiLogic = new ApiLogic();
+            ApiLogic = apiLogic;
         }
 
         public async void Test()
@@ -31,7 +28,7 @@ namespace GameGizmo.MVVM.ViewModel
                 ordering = "-metacritic"
             };
 
-            var result = await ApiLogic.GameQuery(parameters);
+            var result = await ApiLogic.ListOfGamesQuery(parameters);
 
             foreach (var item in result.results)
             {
@@ -39,33 +36,45 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
+        private Result selectedGame;
+
+        public Result SelectedGame
+        {
+            get { return selectedGame; }
+            set
+            {
+                if (!string.Equals(selectedGame, value))
+                {
+                    selectedGame = value;
+                    OnPropertyChanged(nameof(selectedGame));
+                    WeakReferenceMessenger.Default.Send(selectedGame);
+                }
+            }
+        }
+
         public async void GetGameList(GameListType listType, ApiGameParameters? parameters = null)
         {
-            Game? results = null;
-
-            switch (listType)
+            ListOfGames? results = listType switch
             {
-                case GameListType.TopGamesOfAllTime:
-                    results = await ApiLogic.GetHighestRatedGames();
-                    break;
-                case GameListType.NewestGames:
-                    results = await ApiLogic.GetNewestGames();
-                    break;
-                case GameListType.HottestGames:
-                    results = await ApiLogic.GetHottestGames();
-                    break;
-                default:
-                    results = await ApiLogic.Test();
-                    break;
-            }
+                GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(),
+                GameListType.NewestGames => await ApiLogic.GetNewestGames(),
+                GameListType.HottestGames => await ApiLogic.GetHottestGames(),
+                GameListType.SimpleSearch => await ApiLogic.GetSimpleSearch(parameters?.searchQuery),
+                _ => await ApiLogic.Test(),
+            };
 
             AddNewGames(results);
         }
 
-        private void AddNewGames(Game? games)
+        private void AddNewGames(ListOfGames? games)
         {
+            if (games == null)
+            {
+                return;
+            }    
+
             GameList.Clear();
-            foreach (var item in games.results)
+            foreach (var item in games?.results)
             {
                 GameList.Add(item);
             }

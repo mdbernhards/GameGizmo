@@ -15,7 +15,7 @@
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
-    
+
     <Border Background="#272535" CornerRadius="25">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -44,12 +44,6 @@
                              Style="{StaticResource MenuButtonTheme}" Width="200"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}" Checked="RadioButton_Checked"/>
-                <RadioButton Content="Search"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Width="200"
-                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Newest Releases"
                              Height="50"
                              Foreground="White"
@@ -68,15 +62,31 @@
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" Width="200"
                              Command="{Binding HottestGamesViewCommand}" Checked="RadioButton_Checked"/>
+                <RadioButton Content="Developers"
+                             Height="50"
+                             Foreground="White"
+                             FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}" Width="200"
+                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked"/>
             </StackPanel>
 
-            <TextBox Width="250"
-                     Height="40"
-                     VerticalAlignment="Center"
-                     HorizontalAlignment="Left"
-                     Margin="5"
-                     Grid.Column="1"
-                     Style="{StaticResource ModernTextbox}"/>
+            <DockPanel Grid.Column="1">
+                <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Width="561"
+                         Height="40"
+                         Margin="5,5,0,5"
+                         Grid.Column="1"
+                         Style="{StaticResource ModernTextbox}" TextChanged="TextBox_TextChanged"/>
+
+                <RadioButton Content="Search"
+                             
+                             Height="50"
+                             Foreground="White"
+                             FontSize="14"
+                             Margin="0"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked" Width="150"/>
+            </DockPanel>
 
             <ContentControl Grid.Row="1"
                             Grid.Column="1"

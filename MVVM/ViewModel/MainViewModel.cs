@@ -1,19 +1,22 @@
-﻿using GameGizmo.Core;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using GameGizmo.Core;
+using GameGizmo.Logic;
 using GameGizmo.Models;
-using GameGizmo.MVVM.View;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GameGizmo.MVVM.Model;
+using System.Windows;
+using System.Windows.Input;
 
 namespace GameGizmo.MVVM.ViewModel
 {
     internal class MainViewModel : ObservableObject
     {
+        public ApiLogic ApiLogic { get; set; }
+
         public HomeViewModel? Home { get; set; }
 
         public SearchResultsViewModel SearchResults { get; set; }
+
+        public GameViewModel Game { get; set; }
 
         public RelayCommand HomeViewCommand { get; set; }
 
@@ -25,6 +28,21 @@ namespace GameGizmo.MVVM.ViewModel
 
         public RelayCommand HottestGamesViewCommand { get; set; }
 
+        private string searchText = string.Empty;
+
+        public string SearchText
+        {
+            get { return searchText; }
+            set
+            {
+                if (!string.Equals(searchText, value))
+                {
+                    searchText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private object? _currentView;
 
         public object? CurrentView
@@ -33,15 +51,19 @@ namespace GameGizmo.MVVM.ViewModel
             set 
             { 
                 _currentView = value;
-                OnProperrtyChanged();
+                OnPropertyChanged();
             }
         }
 
-
         public MainViewModel()
         {
+            WeakReferenceMessenger.Default.Register<Result>(this, SetGameView);
+            ApiLogic = new ApiLogic();
+
             Home = new HomeViewModel();
-            SearchResults = new SearchResultsViewModel();
+            SearchResults = new SearchResultsViewModel(ApiLogic);
+            Game = new GameViewModel(ApiLogic);
+
             CurrentView = Home;
 
             HomeViewCommand = new RelayCommand(x =>
@@ -52,7 +74,7 @@ namespace GameGizmo.MVVM.ViewModel
             SearchResultsViewCommand = new RelayCommand(x =>
             {
                 CurrentView = SearchResults;
-                SearchResults.GetGameList(GameListType.Other);
+                SearchResults.GetGameList(GameListType.SimpleSearch, new ApiGameParameters { searchQuery = SearchText});
             });
 
             TopGamesViewCommand = new RelayCommand(x =>
@@ -72,6 +94,12 @@ namespace GameGizmo.MVVM.ViewModel
                 CurrentView = SearchResults;
                 SearchResults.GetGameList(GameListType.HottestGames);
             });
+        }
+
+        public void SetGameView(object recipient, Result game)
+        {
+            CurrentView = Game;
+            Game.GetGameView(game);
         }
     }
 }

@@ -5,7 +5,8 @@
              StartupUri="MainWindow.xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:viewModel="clr-namespace:GameGizmo.MVVM.ViewModel"
-             xmlns:view="clr-namespace:GameGizmo.MVVM.View">
+             xmlns:view="clr-namespace:GameGizmo.MVVM.View"
+             xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,6 +22,10 @@
             
             <DataTemplate DataType="{x:Type viewModel:SearchResultsViewModel}">
                 <view:SearchResults/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:GameViewModel}">
+                <view:GameView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
