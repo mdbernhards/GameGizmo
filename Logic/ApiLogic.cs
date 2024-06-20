@@ -30,36 +30,36 @@ namespace GameGizmo.Logic
             return result;
         }
 
-        public async Task<ListOfGames?> GetHighestRatedGames()
+        public async Task<ListOfGames?> GetHighestRatedGames(int? pageNumber, int? pageSize)
         {
             var parameters = new ApiGameParameters
             {
-                pageNumber = 1,
-                pageSize = 15,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
                 ordering = "-metacritic"
             };
 
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> GetNewestGames()
+        public async Task<ListOfGames?> GetNewestGames(int? pageNumber, int? pageSize)
         {
             var parameters = new ApiGameParameters
             {
-                pageNumber = 1,
-                pageSize = 15,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
                 ordering = "added"
             };
 
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> GetHottestGames()
+        public async Task<ListOfGames?> GetHottestGames(int? pageNumber, int? pageSize)
         {
             var parameters = new ApiGameParameters
             {
-                pageNumber = 1,
-                pageSize = 15,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
                 dates = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "," + DateTime.Now.ToString("yyyy-MM-dd"),
                 ordering = "-added"
             };
@@ -67,12 +67,12 @@ namespace GameGizmo.Logic
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> GetSimpleSearch(string? searchQuerry)
+        public async Task<ListOfGames?> GetSimpleSearch(string? searchQuerry, int? pageNumber, int? pageSize)
         {
             var parameters = new ApiGameParameters
             {
-                pageNumber = 1,
-                pageSize = 15,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
                 ordering = "-added",
                 searchQuery = searchQuerry
             };
@@ -124,12 +124,12 @@ namespace GameGizmo.Logic
             return result;
         }
 
-        public async Task<ListOfDevelopers?> ListOfDevelopersQuery()
+        public async Task<ListOfDevelopers?> ListOfDevelopersQuery(int? pageNumber, int? pageSize)
         {
             var parameters = new ApiGameParameters
             {
-                pageNumber = 1,
-                pageSize = 15,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
             };
 
             string query = $"https://api.rawg.io/api/developers" + $"?key=" + Key;

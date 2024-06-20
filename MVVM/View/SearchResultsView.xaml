@@ -77,13 +77,15 @@
             <ui:Button Height="30"
                     Width="45"
                     Margin="6,0,6,0"
-                    Content="&lt;&lt;"></ui:Button>
+                    Content="&lt;&lt;"
+                    Command="{Binding FirstPageViewCommand}"></ui:Button>
             <Button Height="30"
                     Width="45"
                     Margin="6,0,6,0"
-                    Content="&lt;"></Button>
-            
-            <TextBlock Text="1"
+                    Content="&lt;"
+                    Command="{Binding PreviousPageViewCommand}"></Button>
+             
+            <TextBlock Text="{Binding PageNumber}"
                        FontSize="15"
                        Margin="12"
                        Foreground="White"
@@ -93,11 +95,13 @@
             <Button Height="30"
                     Width="45"
                     Margin="6,0,6,0"
-                    Content="&gt;"></Button>
+                    Content="&gt;"
+                    Command="{Binding NextPageViewCommand}"></Button>
             <Button Height="30"
                     Width="45"
                     Margin="6,0,6,0"
-                    Content="&gt;&gt;"></Button>
+                    Content="&gt;&gt;"
+                    Command="{Binding LastPageViewCommand}"></Button>
         </StackPanel>
     </Grid>
 
