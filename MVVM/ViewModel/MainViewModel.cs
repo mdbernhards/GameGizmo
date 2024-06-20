@@ -28,6 +28,8 @@ namespace GameGizmo.MVVM.ViewModel
 
         public RelayCommand HottestGamesViewCommand { get; set; }
 
+        public RelayCommand ListOfDevelopersViewCommand { get; set; }
+
         private string searchText = string.Empty;
 
         public string SearchText
@@ -93,6 +95,12 @@ namespace GameGizmo.MVVM.ViewModel
             {
                 CurrentView = SearchResults;
                 SearchResults.GetGameList(GameListType.HottestGames);
+            });
+
+            ListOfDevelopersViewCommand = new RelayCommand(x =>
+            {
+                CurrentView = SearchResults;
+                SearchResults.GetDeveloperList();
             });
         }
 

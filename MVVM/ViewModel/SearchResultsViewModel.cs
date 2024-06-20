@@ -4,7 +4,7 @@ using GameGizmo.Logic;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Windows;
 
 namespace GameGizmo.MVVM.ViewModel
 {
@@ -12,33 +12,13 @@ namespace GameGizmo.MVVM.ViewModel
     {
         public ApiLogic ApiLogic { get; set; }
 
-        public ObservableCollection<Model.Result> GameList { get; set; } = [];
+        public ObservableCollection<Result> GameList { get; set; } = [];
 
-        public SearchResultsViewModel(ApiLogic apiLogic)
-        {
-            ApiLogic = apiLogic;
-        }
+        public ObservableCollection<Developer> DeveloperList { get; set; } = [];
 
-        public async void Test()
-        {
-            var parameters = new ApiGameParameters
-            {
-                pageNumber = 1,
-                pageSize = 30,
-                ordering = "-metacritic"
-            };
+        private Result? selectedGame;
 
-            var result = await ApiLogic.ListOfGamesQuery(parameters);
-
-            foreach (var item in result.results)
-            {
-                GameList.Add(item);
-            }
-        }
-
-        private Result selectedGame;
-
-        public Result SelectedGame
+        public Result? SelectedGame
         {
             get { return selectedGame; }
             set
@@ -47,13 +27,54 @@ namespace GameGizmo.MVVM.ViewModel
                 {
                     selectedGame = value;
                     OnPropertyChanged(nameof(selectedGame));
-                    WeakReferenceMessenger.Default.Send(selectedGame);
+                    WeakReferenceMessenger.Default.Send(selectedGame ?? new Result());
                 }
             }
         }
 
+        private bool isGameListVisible = false;
+
+        public bool IsGameListVisible
+        {
+            get => isGameListVisible;
+            set
+            {
+                isGameListVisible = value;
+                OnPropertyChanged(nameof(DeveloperListVisibility));
+                OnPropertyChanged(nameof(GameListVisibility));
+            }
+        }
+
+        public Visibility GameListVisibility
+        {
+            get { return IsGameListVisible ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public bool IsDeveloperListVisible
+        {
+            get => !isGameListVisible;
+            set
+            {
+                isGameListVisible = !value;
+                OnPropertyChanged(nameof(DeveloperListVisibility));
+                OnPropertyChanged(nameof(GameListVisibility));
+            }
+        }
+
+        public Visibility DeveloperListVisibility
+        {
+            get { return IsDeveloperListVisible ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public SearchResultsViewModel(ApiLogic apiLogic)
+        {
+            ApiLogic = apiLogic;
+        }
+
         public async void GetGameList(GameListType listType, ApiGameParameters? parameters = null)
         {
+            IsGameListVisible = true;
+
             ListOfGames? results = listType switch
             {
                 GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(),
@@ -68,15 +89,38 @@ namespace GameGizmo.MVVM.ViewModel
 
         private void AddNewGames(ListOfGames? games)
         {
-            if (games == null)
+            if (games == null || games.results == null)
             {
                 return;
-            }    
+            }
 
             GameList.Clear();
-            foreach (var item in games?.results)
+            foreach (var item in games.results)
             {
                 GameList.Add(item);
+            }
+        }
+
+        public async void GetDeveloperList()
+        {
+            IsDeveloperListVisible = true;
+
+            ListOfDevelopers? results = await ApiLogic.ListOfDevelopersQuery();
+
+            AddNewDevelopers(results);
+        }
+
+        private void AddNewDevelopers(ListOfDevelopers? developers)
+        {
+            if (developers == null || developers.results == null)
+            {
+                return;
+            }
+
+            DeveloperList.Clear();
+            foreach (var item in developers.results)
+            {
+                DeveloperList.Add(item);
             }
         }
     }

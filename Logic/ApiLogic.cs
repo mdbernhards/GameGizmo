@@ -6,14 +6,18 @@ namespace GameGizmo.Logic
 {
     public class ApiLogic
     {
-        private Uri path = new($"https://api.rawg.io/api/games?dates=2019-09-01,2019-09-30&ordering=-added&page=1&page_size=5&key=a84e3588362f461a95f7e1d63069c9b5");
+        private readonly string Key = $"a84e3588362f461a95f7e1d63069c9b5";
 
-        private string GameBaseUri = $"https://api.rawg.io/api/games?key=a84e3588362f461a95f7e1d63069c9b5";
+        private Uri path = new($"https://api.rawg.io/api/games?dates=2019-09-01,2019-09-30&ordering=-added&page=1&page_size=5&key=");
+
+        private string GameBaseUri = $"https://api.rawg.io/api/games?key=";
 
         private HttpClient Client;
 
         public ApiLogic()
         {
+            GameBaseUri += Key;
+            path = new Uri(path, Key);
             Client = new();
         }
 
@@ -92,7 +96,7 @@ namespace GameGizmo.Logic
 
         public async Task<Game?> GameQuery(int? gameId)
         {
-            string query = $"https://api.rawg.io/api/games/" + gameId + $"?key=a84e3588362f461a95f7e1d63069c9b5";
+            string query = $"https://api.rawg.io/api/games/" + gameId + $"?key=" + Key;
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(new Uri(query));
 
@@ -105,7 +109,49 @@ namespace GameGizmo.Logic
             return result;
         }
 
+        public async Task<Developer?> DeveloperQuery(int? developerId)
+        {
+            string query = $"https://api.rawg.io/api/developers/" + developerId + $"?key=" + Key;
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var result = await response.Content.ReadAsAsync<Developer?>();
+            return result;
+        }
+
+        public async Task<ListOfDevelopers?> ListOfDevelopersQuery()
+        {
+            var parameters = new ApiGameParameters
+            {
+                pageNumber = 1,
+                pageSize = 15,
+            };
+
+            string query = $"https://api.rawg.io/api/developers" + $"?key=" + Key;
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query + CreateUriParameters(parameters)));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var result = await response.Content.ReadAsAsync<ListOfDevelopers?>();
+            return result;
+        }
+
         private Uri CreateUri(ApiGameParameters parameters)
+        {
+            return new Uri(GameBaseUri + CreateUriParameters(parameters));
+        }
+
+        private string CreateUriParameters(ApiGameParameters parameters)
         {
             string query = string.Empty;
 
@@ -134,7 +180,7 @@ namespace GameGizmo.Logic
                 query += ("&ordering=" + parameters.ordering.ToString());
             }
 
-            return new Uri((GameBaseUri + query.Normalize()));
+            return query.Normalize();
         }
     }
 }

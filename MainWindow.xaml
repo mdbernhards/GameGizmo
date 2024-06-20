@@ -67,7 +67,7 @@
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" Width="200"
-                             Command="{Binding SearchResultsViewCommand}" Checked="RadioButton_Checked"/>
+                             Command="{Binding ListOfDevelopersViewCommand}" Checked="RadioButton_Checked"/>
             </StackPanel>
 
             <DockPanel Grid.Column="1">
