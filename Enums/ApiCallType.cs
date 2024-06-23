@@ -1,5 +1,8 @@
-﻿enum ApiCallType
+﻿namespace GameGizmo.Enums
 {
-    games,
-    developers
+    enum ApiCallType
+    {
+        games,
+        developers
+    }
 }

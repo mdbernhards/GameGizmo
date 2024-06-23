@@ -57,7 +57,7 @@ namespace GameGizmo.MVVM.Model
             }
         }
 
-        private int? pageSize = 16;
+        private int? pageSize = 20;
         public int? PageSize
         {
             get => pageSize;
@@ -68,7 +68,7 @@ namespace GameGizmo.MVVM.Model
             }
         }
 
-        public DateTime? ReleaseRangeFrom { get; set; } = new DateTime(1950, 1, 1);
+        public DateTime? ReleaseRangeFrom { get; set; } = new DateTime(1980, 1, 1);
 
         public DateTime? ReleaseRangeTo { get; set; } = DateTime.Today;
 
@@ -76,6 +76,31 @@ namespace GameGizmo.MVVM.Model
 
         public string? MetacriticScoreTo { get; set; } = "100";
 
-        public List<int>? PageSizeOptions { get; set; } = [16, 32, 64, 128];
+        public List<int>? PageSizeOptions { get; set; } = [10, 20, 30, 40];
+
+        public KeyValuePair<string, string> SortOrder { get; set; }
+
+        public Dictionary<string, string> SortOrderOptions { get; set; } = CreateDictionary();
+
+        private static Dictionary<string, string> CreateDictionary()
+        {
+            var dictionary = new Dictionary<string, string>
+            {
+                { "name", "Name (A to Z)" },
+                { "-name", "Name (Z to A)" },
+                { "-released", "Newer" },
+                { "released", "Older" },
+                { "-added", "Most popular" },
+                { "added", "Low popularity" },
+                { "-updated", "Recently updated" },
+                { "updated", "Rarely updated" },
+                { "-rating", "Highest rated" },
+                { "rating", "Lowest rated" },
+                { "-metacritic", "Metacritic top" },
+                { "metacritic", "Metacritic bottom" }
+            };
+
+            return dictionary;
+        }
     }
 }

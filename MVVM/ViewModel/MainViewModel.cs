@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using GameGizmo.Core;
+using GameGizmo.Enums;
 using GameGizmo.Logic;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;

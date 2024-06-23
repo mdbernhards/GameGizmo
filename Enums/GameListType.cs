@@ -1,8 +1,11 @@
-﻿enum GameListType
+﻿namespace GameGizmo.Enums
 {
-    TopGamesOfAllTime,
-    NewestGames,
-    HottestGames,
-    Search,
-    Other
+    enum GameListType
+    {
+        TopGamesOfAllTime,
+        NewestGames,
+        HottestGames,
+        Search,
+        Other
+    }
 }

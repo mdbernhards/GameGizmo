@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using GameGizmo.Core;
+using GameGizmo.Enums;
+using GameGizmo.HelperModels;
 using GameGizmo.Logic;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
@@ -93,6 +95,8 @@ namespace GameGizmo.MVVM.ViewModel
 
         public Filters Filters { get; set; } = new Filters();
 
+        public LoadingData LoadingData { get; set; } = new LoadingData();
+
         public SearchResultsViewModel(ApiLogic apiLogic)
         {
             ApiLogic = apiLogic;
@@ -106,7 +110,7 @@ namespace GameGizmo.MVVM.ViewModel
                     Filters.PageNumber++;
                 }
 
-                GetList();
+                GetListPage();
             });
 
             PreviousPageViewCommand = new RelayCommand(x =>
@@ -116,19 +120,19 @@ namespace GameGizmo.MVVM.ViewModel
                     Filters.PageNumber--;
                 }
 
-                GetList();
+                GetListPage();
             });
 
             LastPageViewCommand = new RelayCommand(x =>
             {
                 Filters.PageNumber = GetMaxPageNumber();
-                GetList();
+                GetListPage();
             });
 
             FirstPageViewCommand = new RelayCommand(x =>
             {
                 Filters.PageNumber = 1;
-                GetList();
+                GetListPage();
             });
         }
 
@@ -136,6 +140,7 @@ namespace GameGizmo.MVVM.ViewModel
         {
             ApiParameters parameters = CreateApiSearchParameters(searchText);
 
+            LoadingData.IsLoading = true;
             IsGameListVisible = true;
 
             Filters.PageNumber = IsNewSearch ? 1 : Filters.PageNumber;
@@ -152,19 +157,23 @@ namespace GameGizmo.MVVM.ViewModel
             };
 
             AddNewGames(results);
+            LoadingData.IsLoading = false;
         }
 
         public async void GetDeveloperList()
         {
+            LoadingData.IsLoading = true;
             IsDeveloperListVisible = true;
 
             ListOfDevelopers? results = await ApiLogic.ListOfDevelopersQuery(Filters.PageNumber, Filters.PageSize);
 
             AddNewDevelopers(results);
+            LoadingData.IsLoading = false;
         }
 
         private ApiParameters CreateApiSearchParameters(string? searchQuerry)
         {
+
             ApiParameters parameters = new()
             {
                 pageSize = Filters.PageSize,
@@ -173,10 +182,42 @@ namespace GameGizmo.MVVM.ViewModel
                 PlatformIds = Filters.ListOfPlatforms?.Where(x => x.IsSelected == true).Select(x => x.id).ToList(),
                 StoreIds = Filters.ListOfStores?.Where(x => x.IsSelected == true).Select(x => x.id).ToList(),
                 GenresIds = Filters.ListOfGenres?.Where(x => x.IsSelected == true).Select(x => x.id).ToList(),
+                dates = FormatDateParameter(),
+                MetacriticScore = FormatMetacriticParameter(),
+                ordering = Filters.SortOrder.Key,
             };
 
-
             return parameters;
+        }
+
+        private string FormatDateParameter()
+        {
+            if (Filters.ReleaseRangeFrom == null && Filters.ReleaseRangeTo == null)
+            {
+                return string.Empty;
+            }    
+
+            string? dates;
+
+            dates = Filters.ReleaseRangeFrom != null ? Filters.ReleaseRangeFrom.Value.ToString("yyyy-MM-dd") + "," : "1950-01-01,";
+            dates += Filters.ReleaseRangeTo != null ? Filters.ReleaseRangeTo.Value.ToString("yyyy-MM-dd") : DateTime.Today.ToString("yyyy-MM-dd");
+
+            return dates;
+        }
+
+        private string FormatMetacriticParameter()
+        {
+            if (Filters.MetacriticScoreFrom == null && Filters.MetacriticScoreTo == null)
+            {
+                return string.Empty;
+            }
+
+            string? scoreRange;
+
+            scoreRange = Filters.MetacriticScoreFrom != null && Filters.MetacriticScoreFrom != string.Empty ? Math.Clamp(Int32.Parse(Filters.MetacriticScoreFrom),1,100) + "," : "0";
+            scoreRange += Filters.MetacriticScoreTo != null && Filters.MetacriticScoreTo != string.Empty ? Math.Clamp(Int32.Parse(Filters.MetacriticScoreTo), 1, 100) : "100";
+
+            return scoreRange;
         }
 
         private void AddNewDevelopers(ListOfDevelopers? developers)
@@ -216,7 +257,7 @@ namespace GameGizmo.MVVM.ViewModel
             return (ListCount / Filters.PageSize) + 1;
         }
 
-        private void GetList()
+        private void GetListPage()
         {
             if (IsGameListVisible)
             {

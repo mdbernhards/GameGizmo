@@ -70,8 +70,6 @@ namespace GameGizmo.Logic
 
         public async Task<ListOfGames?> GetSimpleSearch(ApiParameters parameters)
         {
-            parameters.ordering = "-added";
-
             return await ListOfGamesQuery(parameters);
         }
 
@@ -193,27 +191,31 @@ namespace GameGizmo.Logic
 
             if (parameters.pageNumber != null)
             {
-                query += ("&page=" + parameters.pageNumber.ToString());
+                query += "&page=" + parameters.pageNumber.ToString();
             }
 
             if (parameters.pageSize != null)
             {
-                query += ("&page_size=" + parameters.pageSize.ToString());
+                query += "&page_size=" + parameters.pageSize.ToString();
             }
 
             if (parameters.searchQuery != null)
             {
-                query += ("&search=" + parameters.searchQuery.ToString());
+                query += "&search=" + parameters.searchQuery.ToString();
             }
 
-            if (parameters.dates != null)
+            if (parameters.dates != null && parameters.dates != string.Empty)
             {
-                query += ("&dates=" + parameters.dates.ToString());
+                query += "&dates=" + parameters.dates.ToString();
             }
 
             if (parameters.ordering != null)
             {
-                query += ("&ordering=" + parameters.ordering.ToString());
+                query += "&ordering=" + parameters.ordering.ToString();
+            }
+            else
+            {
+                query += "&ordering=-added";
             }
 
             if (parameters.PlatformIds != null && parameters.PlatformIds.Count > 0)
@@ -229,6 +231,11 @@ namespace GameGizmo.Logic
             if (parameters.GenresIds != null && parameters.GenresIds.Count > 0)
             {
                 query += "&genres=" + GetParametersFromList(parameters.GenresIds);
+            }
+
+            if (parameters.MetacriticScore != null && parameters.MetacriticScore != string.Empty)
+            {
+                query += "&metacritic=" + parameters.MetacriticScore.ToString();
             }
 
             return query.Normalize();

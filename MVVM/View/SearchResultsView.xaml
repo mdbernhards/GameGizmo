@@ -7,277 +7,289 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="410"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+        <ui:LoadingScreen Visibility="{Binding LoadingData.LoadingVisibility}"
+                      ui:Foreground="White"
+                      BorderBrush="Aqua">
+            <TextBlock Text="Loading.."
+                   FontSize="40"/>
+        </ui:LoadingScreen>
+        <Grid Visibility="{Binding LoadingData.ContentVisibility}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="410"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="530"/>
-            <ColumnDefinition Width="210"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="530"/>
+                <ColumnDefinition Width="210"/>
+            </Grid.ColumnDefinitions>
         
-        <ui:ListView Name="GameListView" 
-                    ItemsSource="{Binding GameList}"
-                    Visibility="{Binding GameListVisibility}"
-                    Width="548">
-            <ui:ListView.View>
-                <ui:GridView x:Name="GameListGridView">
-                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
-                    <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
-                    <GridViewColumn Width="Auto" Header="Released" DisplayMemberBinding="{Binding Path=released}" />
-                    <GridViewColumn Width="Auto" Header="Rating" DisplayMemberBinding="{Binding Path=rating}"/>
-                </ui:GridView>
-            </ui:ListView.View>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Foreground" Value="White"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="DarkGoldenrod"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ui:ListView>
-        <ui:ListView Name="DeveloperListView" 
-                    ItemsSource="{Binding DeveloperList}"
-                    Visibility="{Binding DeveloperListVisibility}"
-                    Width="530">
-            <ui:ListView.View>
-                <ui:GridView x:Name="DeveloperListGridView">
-                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
-                    <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
-                    <GridViewColumn Width="Auto" Header="Game Count" DisplayMemberBinding="{Binding Path=games_count}" />
-                </ui:GridView>
-            </ui:ListView.View>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Foreground" Value="White"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="DarkGoldenrod"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ui:ListView>
+            <ui:ListView Name="GameListView" 
+                        ItemsSource="{Binding GameList}"
+                        Visibility="{Binding GameListVisibility}"
+                        Width="548">
+                <ui:ListView.View>
+                    <ui:GridView x:Name="GameListGridView">
+                        <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
+                        <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
+                        <GridViewColumn Width="Auto" Header="Released" DisplayMemberBinding="{Binding Path=released}" />
+                        <GridViewColumn Width="Auto" Header="Metacritic" DisplayMemberBinding="{Binding Path=metacritic}" />
+                        <GridViewColumn Width="Auto" Header="Rating" DisplayMemberBinding="{Binding Path=rating}"/>
+                    </ui:GridView>
+                </ui:ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Foreground" Value="White"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkGoldenrod"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ui:ListView>
+            <ui:ListView Name="DeveloperListView" 
+                        ItemsSource="{Binding DeveloperList}"
+                        Visibility="{Binding DeveloperListVisibility}"
+                        Width="530">
+                <ui:ListView.View>
+                    <ui:GridView x:Name="DeveloperListGridView">
+                        <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
+                        <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
+                        <GridViewColumn Width="Auto" Header="Game Count" DisplayMemberBinding="{Binding Path=games_count}" />
+                    </ui:GridView>
+                </ui:ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Foreground" Value="White"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkGoldenrod"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ui:ListView>
 
-        <ui:PassiveScrollViewer VerticalScrollBarVisibility="Auto"
-                                Height="410"
-                                Width="165" 
-                                Grid.Column="1"
-                                Visibility="{Binding GameListVisibility}">
-            <StackPanel Width="160">
-                <TextBlock Text="Filter"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="17"
-                        Margin="0,15,0,0"
-                        FontFamily="/Fonts/#Poppins"/>
-                <TextBlock Text="Platforms"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,25,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <ListBox SelectionMode="Multiple" 
-                         Height="90"
-                         Width="140"
-                         BorderThickness="3"
-                         BorderBrush="DarkBlue"
-                         ItemsSource="{Binding Filters.ListOfPlatforms}" d:ItemsSource="{d:SampleData ItemCount=5}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="1"/>
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock FontSize="10"
-                                       FontFamily="/Fonts/#Poppins"
-                                       Margin="0"
-                                       Foreground="White"
-                                       Text="{Binding name}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            
-                <TextBlock Text="Stores"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <ListBox SelectionMode="Multiple" 
-                         Height="90"
-                         Width="140"
-                         BorderThickness="3"
-                         BorderBrush="DarkBlue"
-                         ItemsSource="{Binding Filters.ListOfStores}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="1"/>
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock FontSize="10"
-                                       FontFamily="/Fonts/#Poppins"
-                                       Margin="0"
-                                       Foreground="White"
-                                       Text="{Binding name}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-                <TextBlock Text="Genres"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <ListBox SelectionMode="Multiple" 
-                         Height="100"
-                         Width="140"
-                         BorderThickness="3"
-                         BorderBrush="DarkBlue"
-                         ItemsSource="{Binding Filters.ListOfGenres}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="1"/>
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock FontSize="10"
-                                       FontFamily="/Fonts/#Poppins"
-                                       Margin="0"
-                                       Foreground="White"
-                                       Text="{Binding name}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-                <TextBlock Text="Released from"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <DatePicker SelectedDate="{Binding Filters.ReleaseRangeFrom}"
-                            SelectedDateFormat="Short"
-                            Margin="0,0,10,0"/>
-                <TextBlock Text="Released to"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <DatePicker SelectedDate="{Binding Filters.ReleaseRangeTo}"
-                            SelectedDateFormat="Short"
-                            Margin="0,0,10,0"/>
-                
-                <TextBlock Text="Metacritic Range"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <StackPanel Orientation="Horizontal"
+            <ui:PassiveScrollViewer VerticalScrollBarVisibility="Auto"
+                                    Height="410"
+                                    Width="165" 
+                                    Grid.Column="1"
+                                    Visibility="{Binding GameListVisibility}">
+                <StackPanel Width="160">
+                    <TextBlock Text="Filter"
+                            VerticalAlignment="Top"
                             HorizontalAlignment="Center"
-                            Margin="0,0,10,0">
-                    <ui:TextBox HorizontalAlignment="Stretch"
-                                Width="70"
-                                Text="{Binding Filters.MetacriticScoreFrom}"
-                                PreviewTextInput="NumberValidationTextBox"/>
-                    <TextBlock Text=" - "
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               FontSize="13"/>
-                    <ui:TextBox HorizontalAlignment="Stretch"
-                                Width="70"
-                                Text="{Binding Filters.MetacriticScoreTo}"
-                                PreviewTextInput="NumberValidationTextBox"/>
+                            Foreground="White"
+                            FontSize="17"
+                            Margin="0,15,0,0"
+                            FontFamily="/Fonts/#Poppins"/>
+                
+                    <TextBlock Text="Order by"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <ComboBox ItemsSource="{Binding Filters.SortOrderOptions}"
+                              SelectedItem="{Binding Filters.SortOrder}"
+                              SelectedValuePath="Key"
+                              DisplayMemberPath="Value"
+                              Margin="0,0,10,0"/>
+                
+                    <TextBlock Text="ListSize"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <ComboBox ItemsSource="{Binding Filters.PageSizeOptions}"
+                              SelectedItem="{Binding Filters.PageSize}"
+                              Margin="0,0,10,0"/>
+
+                    <TextBlock Text="Genres"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <ListBox SelectionMode="Multiple" 
+                             Height="100"
+                             Width="140"
+                             BorderThickness="3"
+                             BorderBrush="DarkBlue"
+                             ItemsSource="{Binding Filters.ListOfGenres}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="1"/>
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="10"
+                                           FontFamily="/Fonts/#Poppins"
+                                           Margin="0"
+                                           Foreground="White"
+                                           Text="{Binding name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBlock Text="Released from"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <DatePicker SelectedDate="{Binding Filters.ReleaseRangeFrom}"
+                                SelectedDateFormat="Short"
+                                Margin="0,0,10,0"/>
+                    <TextBlock Text="Released to"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <DatePicker SelectedDate="{Binding Filters.ReleaseRangeTo}"
+                                SelectedDateFormat="Short"
+                                Margin="0,0,10,0"/>
+                
+                    <TextBlock Text="Platforms"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,25,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <ListBox SelectionMode="Multiple" 
+                             Height="90"
+                             Width="140"
+                             BorderThickness="3"
+                             BorderBrush="DarkBlue"
+                             ItemsSource="{Binding Filters.ListOfPlatforms}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="1"/>
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="10"
+                                           FontFamily="/Fonts/#Poppins"
+                                           Margin="0"
+                                           Foreground="White"
+                                           Text="{Binding name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+            
+                    <TextBlock Text="Stores"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <ListBox SelectionMode="Multiple" 
+                             Height="90"
+                             Width="140"
+                             BorderThickness="3"
+                             BorderBrush="DarkBlue"
+                             ItemsSource="{Binding Filters.ListOfStores}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="1"/>
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="10"
+                                           FontFamily="/Fonts/#Poppins"
+                                           Margin="0"
+                                           Foreground="White"
+                                           Text="{Binding name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                
+                    <TextBlock Text="Metacritic Range"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            FontSize="13"
+                            Margin="0,15,0,10"
+                            FontFamily="/Fonts/#Poppins"/>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,10,0">
+                        <ui:TextBox HorizontalAlignment="Stretch"
+                                    Width="70"
+                                    Text="{Binding Filters.MetacriticScoreFrom}"
+                                    PreviewTextInput="NumberValidationTextBox"/>
+                        <TextBlock Text=" - "
+                                   Foreground="White"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"/>
+                        <ui:TextBox HorizontalAlignment="Stretch"
+                                    Width="70"
+                                    Text="{Binding Filters.MetacriticScoreTo}"
+                                    PreviewTextInput="NumberValidationTextBox"/>
+                    </StackPanel>
+
+                    <Button Content="Apply Filter"
+                            Width="120"
+                            Height="30"
+                            HorizontalAlignment="Center"
+                            Margin="0,25,0,0">
+                
+                    </Button>
                 </StackPanel>
-                
-                <TextBlock Text="ListSize"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <ComboBox ItemsSource="{Binding Filters.PageSizeOptions}"
-                          SelectedItem="{Binding Filters.PageSize}"
-                          Margin="0,0,10,0"/>
-
-                <TextBlock Text="Order by"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Foreground="White"
-                        FontSize="13"
-                        Margin="0,15,0,10"
-                        FontFamily="/Fonts/#Poppins"/>
-                <ui:TextBox HorizontalAlignment="Stretch"
-                                Width="100"/>
-
-                <Button Content="Apply Filter"
-                        Width="120"
-                        Height="30"
-                        HorizontalAlignment="Center"
-                        Margin="0,25,0,0">
-                
-                </Button>
-            </StackPanel>
-        </ui:PassiveScrollViewer>
+            </ui:PassiveScrollViewer>
         
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Grid.Row="1">
-            <ui:Button Height="30"
-                    Width="45"
-                    Margin="6,0,6,0"
-                    Content="&lt;&lt;"
-                    Command="{Binding FirstPageViewCommand}"></ui:Button>
-            <Button Height="30"
-                    Width="45"
-                    Margin="6,0,6,0"
-                    Content="&lt;"
-                    Command="{Binding PreviousPageViewCommand}"></Button>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Grid.Row="1">
+                <ui:Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&lt;&lt;"
+                        Command="{Binding FirstPageViewCommand}"></ui:Button>
+                <Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&lt;"
+                        Command="{Binding PreviousPageViewCommand}"></Button>
              
-            <TextBlock Text="{Binding Filters.PageNumber}"
-                       FontSize="15"
-                       Margin="12"
-                       Foreground="White"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Filters.PageNumber}"
+                           FontSize="15"
+                           Margin="12"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
 
-            <Button Height="30"
-                    Width="45"
-                    Margin="6,0,6,0"
-                    Content="&gt;"
-                    Command="{Binding NextPageViewCommand}"></Button>
-            <Button Height="30"
-                    Width="45"
-                    Margin="6,0,6,0"
-                    Content="&gt;&gt;"
-                    Command="{Binding LastPageViewCommand}"></Button>
-        </StackPanel>
+                <Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&gt;"
+                        Command="{Binding NextPageViewCommand}"></Button>
+                <Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&gt;&gt;"
+                        Command="{Binding LastPageViewCommand}"></Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 
 </UserControl>
