@@ -1,5 +1,6 @@
 ﻿using GameGizmo.MVVM.Model;
 using GameGizmo.MVVM.ViewModel;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -17,12 +18,29 @@ namespace GameGizmo.MVVM.View
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var item = (Result)((ListViewItem)sender).Content;
+            var item = ((ListViewItem)sender).Content;
 
-            if (DataContext is SearchResultsViewModel vm)
+            if (item is Result game)
             {
-                vm.SelectedGame = item;
+                if (DataContext is SearchResultsViewModel vm)
+                {
+                    vm.SelectedGame = game;
+                }
             }
+            else if (item is Developer developer)
+            {
+                if (DataContext is SearchResultsViewModel vm)
+                {
+                    vm.SelectedDeveloper = developer;
+                }
+            }
+
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

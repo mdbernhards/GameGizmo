@@ -1,6 +1,6 @@
 ﻿namespace GameGizmo.Models
 {
-    public class ApiGameParameters
+    public class ApiParameters
     {
         public string? id { get; set; }
 
@@ -14,6 +14,12 @@
 
         public string? ordering { get; set; }
 
-        public ApiGameParameters() { }
+        public List<int?>? PlatformIds { get; set; }
+
+        public List<int?>? StoreIds { get; set; }
+
+        public List<int?>? GenresIds { get; set; }
+
+        public ApiParameters() { }
     }
 }

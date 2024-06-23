@@ -7,18 +7,11 @@
         public string? name { get; set; }
     }
 
-    public class Platform
+    public class GamePlatforms
     {
         public Platform? platform { get; set; }
         public string? released_at { get; set; }
         public Requirements? requirements { get; set; }
-    }
-
-    public class Platform2
-    {
-        public int? id { get; set; }
-        public string? slug { get; set; }
-        public string? name { get; set; }
     }
 
     public class Requirements
@@ -45,7 +38,7 @@
         public int? suggestions_count { get; set; }
         public DateTime? updated { get; set; }
         public EsrbRating? esrb_rating { get; set; }
-        public List<Platform>? platforms { get; set; }
+        public List<GamePlatforms>? platforms { get; set; }
     }
 
     public class ListOfGames

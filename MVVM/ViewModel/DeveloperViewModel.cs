@@ -1,4 +1,4 @@
-﻿using GameGizmo.Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using GameGizmo.HelperModels;
 using GameGizmo.Logic;
 using GameGizmo.MVVM.Model;
@@ -6,49 +6,50 @@ using System.Text.RegularExpressions;
 
 namespace GameGizmo.MVVM.ViewModel
 {
-    internal class GameViewModel(ApiLogic apiLogic) : ObservableObject
+    internal class DeveloperViewModel(ApiLogic apiLogic) : ObservableObject
     {
-        private Game? game;
-        public Game? Game
+        private Developer? developer;
+        public Developer? Developer
         {
-            get { return game; }
+            get { return developer; }
             set
             {
-                if (!Equals(game, value))
+                if (!string.Equals(developer, value))
                 {
-                    game = value;
+                    developer = value;
 
-                    if (game != null)
+                    if (developer != null)
                     {
-                        if (game.description == null || game.description == string.Empty)
+                        if (developer.description == null || developer.description == string.Empty)
                         {
-                            game.description = "No description found!";
+                            developer.description = "No description found!";
                         }
                         else
                         {
                             Regex rgx = new Regex("<p>|</p>");
-                            game.description = Regex.Replace(game.description, @"<[^>]*>", String.Empty);
+                            developer.description = Regex.Replace(developer.description, @"<[^>]*>", String.Empty);
                         }
+
 
                         OnPropertyChanged();
                     }
                 }
             }
         }
+
         public ApiLogic ApiLogic { get; set; } = apiLogic;
 
         public LoadingData LoadingData { get; set; } = new LoadingData();
 
-        public async void GetGameView(int? gameId)
+        public async void GetDeveloperView(int? developerId)
         {
-            if (gameId == null)
+            if (developerId == null)
             {
                 return;
             }
 
             LoadingData.IsLoading = true;
-
-            Game = await ApiLogic.GameQuery(gameId);
+            Developer = await ApiLogic.DeveloperQuery(developerId);
 
             LoadingData.IsLoading = false;
         }

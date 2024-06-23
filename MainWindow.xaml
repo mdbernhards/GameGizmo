@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameGizmo"
         xmlns:viewModel="clr-namespace:GameGizmo.MVVM.ViewModel"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
-        Title="MainWindow" 
+        Title="GameGizmo" 
         Height="600" Width="920"
-        WindowStyle="None"
+        WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
         Background="Transparent">
 
@@ -16,10 +17,10 @@
         <viewModel:MainViewModel/>
     </Window.DataContext>
 
-    <Border Background="#272535" CornerRadius="25">
+    <Border Background="#272535">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="170"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -41,32 +42,32 @@
                              Height="50"
                              Foreground="White"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Width="200"
+                             Style="{StaticResource MenuButtonTheme}" Width="170"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Newest Releases"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Width="200"
+                             Style="{StaticResource MenuButtonTheme}" Width="170"
                              Command="{Binding NewestGamesViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Top Rated Games"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Width="200"
+                             Style="{StaticResource MenuButtonTheme}" Width="170"
                              Command="{Binding TopGamesViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Hottest Games"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Width="200"
+                             Style="{StaticResource MenuButtonTheme}" Width="170"
                              Command="{Binding HottestGamesViewCommand}" Checked="RadioButton_Checked"/>
                 <RadioButton Content="Developers"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Width="200"
+                             Style="{StaticResource MenuButtonTheme}" Width="170"
                              Command="{Binding ListOfDevelopersViewCommand}" Checked="RadioButton_Checked"/>
             </StackPanel>
 

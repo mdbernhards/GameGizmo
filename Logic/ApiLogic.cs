@@ -1,4 +1,5 @@
-﻿using GameGizmo.Models;
+﻿using GameGizmo.HelperModels;
+using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
 using System.Net.Http;
 
@@ -32,7 +33,7 @@ namespace GameGizmo.Logic
 
         public async Task<ListOfGames?> GetHighestRatedGames(int? pageNumber, int? pageSize)
         {
-            var parameters = new ApiGameParameters
+            var parameters = new ApiParameters
             {
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -44,7 +45,7 @@ namespace GameGizmo.Logic
 
         public async Task<ListOfGames?> GetNewestGames(int? pageNumber, int? pageSize)
         {
-            var parameters = new ApiGameParameters
+            var parameters = new ApiParameters
             {
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -56,7 +57,7 @@ namespace GameGizmo.Logic
 
         public async Task<ListOfGames?> GetHottestGames(int? pageNumber, int? pageSize)
         {
-            var parameters = new ApiGameParameters
+            var parameters = new ApiParameters
             {
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -67,31 +68,24 @@ namespace GameGizmo.Logic
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> GetSimpleSearch(string? searchQuerry, int? pageNumber, int? pageSize)
+        public async Task<ListOfGames?> GetSimpleSearch(ApiParameters parameters)
         {
-            var parameters = new ApiGameParameters
-            {
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                ordering = "-added",
-                searchQuery = searchQuerry
-            };
+            parameters.ordering = "-added";
 
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> ListOfGamesQuery(ApiGameParameters parameters)
+        public async Task<ListOfGames?> ListOfGamesQuery(ApiParameters parameters)
         {
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(CreateUri(parameters));
 
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return new ListOfGames();
             }
 
-            var result = await response.Content.ReadAsAsync<ListOfGames?>();
-            return result;
+            return await response.Content.ReadAsAsync<ListOfGames?>();
         }
 
         public async Task<Game?> GameQuery(int? gameId)
@@ -102,11 +96,10 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return new Game();
             }
 
-            var result = await response.Content.ReadAsAsync<Game?>();
-            return result;
+            return await response.Content.ReadAsAsync<Game?>();
         }
 
         public async Task<Developer?> DeveloperQuery(int? developerId)
@@ -117,16 +110,15 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return new Developer();
             }
 
-            var result = await response.Content.ReadAsAsync<Developer?>();
-            return result;
+            return await response.Content.ReadAsAsync<Developer?>();
         }
 
         public async Task<ListOfDevelopers?> ListOfDevelopersQuery(int? pageNumber, int? pageSize)
         {
-            var parameters = new ApiGameParameters
+            var parameters = new ApiParameters
             {
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -139,19 +131,63 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return new ListOfDevelopers();
             }
 
-            var result = await response.Content.ReadAsAsync<ListOfDevelopers?>();
-            return result;
+            return await response.Content.ReadAsAsync<ListOfDevelopers?>();
         }
 
-        private Uri CreateUri(ApiGameParameters parameters)
+        public async Task<ListOfPlatforms?> ListOfPlatformsQuery()
+        {
+            string query = $"https://api.rawg.io/api/platforms" + $"?key=" + Key;
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ListOfPlatforms();
+            }
+
+            return await response.Content.ReadAsAsync<ListOfPlatforms?>();
+        }
+
+        public async Task<ListOfStores?> ListOfStoresQuery()
+        {
+            string query = $"https://api.rawg.io/api/stores" + $"?key=" + Key;
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ListOfStores();
+            }
+
+            return await response.Content.ReadAsAsync<ListOfStores?>();
+        }
+
+        public async Task<ListOfGenres?> ListOfGenresQuery()
+        {
+            string query = $"https://api.rawg.io/api/genres" + $"?key=" + Key;
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ListOfGenres();
+            }
+
+            return await response.Content.ReadAsAsync<ListOfGenres?>();
+        }
+
+        private Uri CreateUri(ApiParameters parameters)
         {
             return new Uri(GameBaseUri + CreateUriParameters(parameters));
         }
 
-        private string CreateUriParameters(ApiGameParameters parameters)
+        private string CreateUriParameters(ApiParameters parameters)
         {
             string query = string.Empty;
 
@@ -180,7 +216,35 @@ namespace GameGizmo.Logic
                 query += ("&ordering=" + parameters.ordering.ToString());
             }
 
+            if (parameters.PlatformIds != null && parameters.PlatformIds.Count > 0)
+            {
+                query += "&platforms=" + GetParametersFromList(parameters.PlatformIds);
+            }
+
+            if (parameters.StoreIds != null && parameters.StoreIds.Count > 0)
+            {
+                query += "&stores=" + GetParametersFromList(parameters.StoreIds);
+            }
+
+            if (parameters.GenresIds != null && parameters.GenresIds.Count > 0)
+            {
+                query += "&genres=" + GetParametersFromList(parameters.GenresIds);
+            }
+
             return query.Normalize();
+        }
+
+        private static string? GetParametersFromList(List<int?> parameters)
+        {
+            string? ids = null;
+
+            foreach (var item in parameters)
+            {
+                ids = ids == null ? ids : ids += ",";
+                ids += item;
+            }
+
+            return ids;
         }
     }
 }

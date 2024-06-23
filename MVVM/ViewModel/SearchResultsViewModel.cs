@@ -3,7 +3,6 @@ using GameGizmo.Core;
 using GameGizmo.Logic;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
-using GameGizmo.MVVM.View;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -11,14 +10,11 @@ namespace GameGizmo.MVVM.ViewModel
 {
     internal class SearchResultsViewModel : ObservableObject
     {
-        public ApiLogic ApiLogic { get; set; }
-
         public ObservableCollection<Result> GameList { get; set; } = [];
 
         public ObservableCollection<Developer> DeveloperList { get; set; } = [];
 
         private Result? selectedGame;
-
         public Result? SelectedGame
         {
             get { return selectedGame; }
@@ -33,8 +29,24 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
-        private bool isGameListVisible = false;
+        private Developer? selectedDeveloper;
+        public Developer? SelectedDeveloper
+        {
+            get { return selectedDeveloper; }
+            set
+            {
+                if (!string.Equals(selectedDeveloper, value))
+                {
+                    selectedDeveloper = value;
+                    OnPropertyChanged(nameof(selectedDeveloper));
+                    WeakReferenceMessenger.Default.Send(selectedDeveloper ?? new Developer());
+                }
+            }
+        }
 
+        public ApiLogic ApiLogic { get; set; }
+
+        private bool isGameListVisible = false;
         public bool IsGameListVisible
         {
             get => isGameListVisible;
@@ -46,11 +58,6 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
-        public Visibility GameListVisibility
-        {
-            get { return IsGameListVisible ? Visibility.Visible : Visibility.Collapsed; }
-        }
-
         public bool IsDeveloperListVisible
         {
             get => !isGameListVisible;
@@ -60,6 +67,11 @@ namespace GameGizmo.MVVM.ViewModel
                 OnPropertyChanged(nameof(DeveloperListVisibility));
                 OnPropertyChanged(nameof(GameListVisibility));
             }
+        }
+
+        public Visibility GameListVisibility
+        {
+            get { return IsGameListVisible ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         public Visibility DeveloperListVisibility
@@ -76,41 +88,22 @@ namespace GameGizmo.MVVM.ViewModel
         public RelayCommand PreviousPageViewCommand { get; set; }
 
         private GameListType ListType = GameListType.TopGamesOfAllTime;
-        private ApiGameParameters? Parameters = new ApiGameParameters();
-
-        private int? pageNumber = 1;
-        public int? PageNumber
-        {
-            get => pageNumber;
-            set
-            {
-                pageNumber = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int? pageSize = 16;
-        public int? PageSize
-        {
-            get => pageSize;
-            set
-            {
-                pageSize = value;
-                OnPropertyChanged();
-            }
-        }
 
         private int? ListCount = 1;
+
+        public Filters Filters { get; set; } = new Filters();
 
         public SearchResultsViewModel(ApiLogic apiLogic)
         {
             ApiLogic = apiLogic;
 
+            GetFilters();
+
             NextPageViewCommand = new RelayCommand(x =>
             {
-                if (GetMaxPageNumber() >= pageNumber)
+                if (GetMaxPageNumber() >= Filters.PageNumber)
                 {
-                    PageNumber++;
+                    Filters.PageNumber++;
                 }
 
                 GetList();
@@ -118,9 +111,9 @@ namespace GameGizmo.MVVM.ViewModel
 
             PreviousPageViewCommand = new RelayCommand(x =>
             {
-                if (pageNumber > 1)
+                if (Filters.PageNumber > 1)
                 {
-                    PageNumber--;
+                    Filters.PageNumber--;
                 }
 
                 GetList();
@@ -128,52 +121,78 @@ namespace GameGizmo.MVVM.ViewModel
 
             LastPageViewCommand = new RelayCommand(x =>
             {
-                PageNumber = GetMaxPageNumber();
+                Filters.PageNumber = GetMaxPageNumber();
                 GetList();
             });
 
             FirstPageViewCommand = new RelayCommand(x =>
             {
-                PageNumber = 1;
+                Filters.PageNumber = 1;
                 GetList();
             });
         }
 
-        private void GetList()
+        public async void GetGameList(GameListType listType, string? searchText = null, bool IsNewSearch = true)
         {
-            if (IsGameListVisible)
-            {
-                GetGameList(ListType, Parameters, false);
-            }
-            else
-            {
-                GetDeveloperList();
-            }
-        }
+            ApiParameters parameters = CreateApiSearchParameters(searchText);
 
-        private int? GetMaxPageNumber()
-        {
-            return (ListCount / pageSize) + 1;
-        }
-
-        public async void GetGameList(GameListType listType, ApiGameParameters? parameters = null, bool IsNewSearch = true)
-        {
             IsGameListVisible = true;
 
-            PageNumber = IsNewSearch ? 1 : PageNumber;
+            Filters.PageNumber = IsNewSearch ? 1 : Filters.PageNumber;
             ListType = listType;
-            Parameters = parameters;
+            Filters.Parameters = parameters;
 
             ListOfGames? results = listType switch
             {
-                GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(PageNumber, PageSize),
-                GameListType.NewestGames => await ApiLogic.GetNewestGames(PageNumber, PageSize),
-                GameListType.HottestGames => await ApiLogic.GetHottestGames(PageNumber, PageSize),
-                GameListType.SimpleSearch => await ApiLogic.GetSimpleSearch(parameters?.searchQuery, PageNumber, PageSize),
+                GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(Filters.PageNumber, Filters.PageSize),
+                GameListType.NewestGames => await ApiLogic.GetNewestGames(Filters.PageNumber, Filters.PageSize),
+                GameListType.HottestGames => await ApiLogic.GetHottestGames(Filters.PageNumber, Filters.PageSize),
+                GameListType.Search => await ApiLogic.GetSimpleSearch(parameters),
                 _ => await ApiLogic.Test(),
             };
 
             AddNewGames(results);
+        }
+
+        public async void GetDeveloperList()
+        {
+            IsDeveloperListVisible = true;
+
+            ListOfDevelopers? results = await ApiLogic.ListOfDevelopersQuery(Filters.PageNumber, Filters.PageSize);
+
+            AddNewDevelopers(results);
+        }
+
+        private ApiParameters CreateApiSearchParameters(string? searchQuerry)
+        {
+            ApiParameters parameters = new()
+            {
+                pageSize = Filters.PageSize,
+                pageNumber = Filters.PageNumber,
+                searchQuery = searchQuerry,
+                PlatformIds = Filters.ListOfPlatforms?.Where(x => x.IsSelected == true).Select(x => x.id).ToList(),
+                StoreIds = Filters.ListOfStores?.Where(x => x.IsSelected == true).Select(x => x.id).ToList(),
+                GenresIds = Filters.ListOfGenres?.Where(x => x.IsSelected == true).Select(x => x.id).ToList(),
+            };
+
+
+            return parameters;
+        }
+
+        private void AddNewDevelopers(ListOfDevelopers? developers)
+        {
+            if (developers == null || developers.results == null)
+            {
+                return;
+            }
+
+            ListCount = developers.count;
+
+            DeveloperList.Clear();
+            foreach (var item in developers.results)
+            {
+                DeveloperList.Add(item);
+            }
         }
 
         private void AddNewGames(ListOfGames? games)
@@ -192,29 +211,32 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
-        public async void GetDeveloperList()
+        private int? GetMaxPageNumber()
         {
-            IsDeveloperListVisible = true;
-
-            ListOfDevelopers? results = await ApiLogic.ListOfDevelopersQuery(PageNumber, PageSize);
-
-            AddNewDevelopers(results);
+            return (ListCount / Filters.PageSize) + 1;
         }
 
-        private void AddNewDevelopers(ListOfDevelopers? developers)
+        private void GetList()
         {
-            if (developers == null || developers.results == null)
+            if (IsGameListVisible)
             {
-                return;
+                GetGameList(ListType, Filters.Parameters?.searchQuery, false);
             }
-
-            ListCount = developers.count;
-
-            DeveloperList.Clear();
-            foreach (var item in developers.results)
+            else
             {
-                DeveloperList.Add(item);
+                GetDeveloperList();
             }
+        }
+
+        private async void GetFilters()
+        {
+            var platforms = await ApiLogic.ListOfPlatformsQuery();
+            var stores = await ApiLogic.ListOfStoresQuery();
+            var genres = await ApiLogic.ListOfGenresQuery();
+
+            Filters.ListOfPlatforms = platforms?.results ?? [];
+            Filters.ListOfStores = stores?.results ?? [];
+            Filters.ListOfGenres = genres?.results ?? [];
         }
     }
 }

@@ -3,20 +3,20 @@ using GameGizmo.Core;
 using GameGizmo.Logic;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
-using System.Windows;
-using System.Windows.Input;
 
 namespace GameGizmo.MVVM.ViewModel
 {
     internal class MainViewModel : ObservableObject
     {
-        public ApiLogic ApiLogic { get; set; }
+        public DeveloperViewModel Developer { get; set; }
+
+        public GameViewModel Game { get; set; }
 
         public HomeViewModel? Home { get; set; }
 
         public SearchResultsViewModel SearchResults { get; set; }
 
-        public GameViewModel Game { get; set; }
+        public ApiLogic ApiLogic { get; set; }
 
         public RelayCommand HomeViewCommand { get; set; }
 
@@ -60,11 +60,13 @@ namespace GameGizmo.MVVM.ViewModel
         public MainViewModel()
         {
             WeakReferenceMessenger.Default.Register<Result>(this, SetGameView);
+            WeakReferenceMessenger.Default.Register<Developer>(this, SetDeveloperView);
             ApiLogic = new ApiLogic();
 
             Home = new HomeViewModel();
             SearchResults = new SearchResultsViewModel(ApiLogic);
             Game = new GameViewModel(ApiLogic);
+            Developer = new DeveloperViewModel(ApiLogic);
 
             CurrentView = Home;
 
@@ -75,39 +77,45 @@ namespace GameGizmo.MVVM.ViewModel
 
             SearchResultsViewCommand = new RelayCommand(x =>
             {
+                SearchResults.GetGameList(GameListType.Search, SearchText);
                 CurrentView = SearchResults;
-                SearchResults.GetGameList(GameListType.SimpleSearch, new ApiGameParameters { searchQuery = SearchText});
             });
 
             TopGamesViewCommand = new RelayCommand(x =>
             {
-                CurrentView = SearchResults;
                 SearchResults.GetGameList(GameListType.TopGamesOfAllTime);
+                CurrentView = SearchResults;
             });
 
             NewestGamesViewCommand = new RelayCommand(x =>
             {
-                CurrentView = SearchResults;
                 SearchResults.GetGameList(GameListType.NewestGames);
+                CurrentView = SearchResults;
             });
 
             HottestGamesViewCommand = new RelayCommand(x =>
             {
-                CurrentView = SearchResults;
                 SearchResults.GetGameList(GameListType.HottestGames);
+                CurrentView = SearchResults;
             });
 
             ListOfDevelopersViewCommand = new RelayCommand(x =>
             {
-                CurrentView = SearchResults;
                 SearchResults.GetDeveloperList();
+                CurrentView = SearchResults;
             });
         }
 
         public void SetGameView(object recipient, Result game)
         {
+            Game.GetGameView(game.id);
             CurrentView = Game;
-            Game.GetGameView(game);
+        }
+
+        public void SetDeveloperView(object recipient, Developer developer)
+        {
+            Developer.GetDeveloperView(developer.id);
+            CurrentView = Developer;
         }
     }
 }
