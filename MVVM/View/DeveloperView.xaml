@@ -8,13 +8,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ui:LoadingScreen Visibility="{Binding LoadingData.LoadingVisibility}"
+        <ui:LoadingScreen Visibility="{Binding Developer.LoadingData.LoadingVisibility}"
                       ui:Foreground="White"
                       BorderBrush="Aqua">
             <TextBlock Text="Loading.."
                    FontSize="40"/>
         </ui:LoadingScreen>
-        <Grid Visibility="{Binding LoadingData.ContentVisibility}">
+        <Grid Visibility="{Binding Developer.LoadingData.ContentVisibility}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="450"/>
@@ -28,10 +28,10 @@
         </Grid.RowDefinitions>
 
         <Grid.Background>
-            <ImageBrush ImageSource="{Binding Developer.image_background}" Opacity="0.1"/>
+            <ImageBrush ImageSource="{Binding Developer.ImageBackground}" Opacity="0.1"/>
         </Grid.Background>
 
-        <TextBlock Text="{Binding Developer.name}"
+        <TextBlock Text="{Binding Developer.Name}"
                     Grid.Column="1"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
@@ -53,7 +53,7 @@
             <ui:DynamicScrollViewer VerticalScrollBarVisibility="Auto"
                             Height="220"
                             Width="450" >
-                <TextBlock Text="{Binding Developer.description}"
+                <TextBlock Text="{Binding Developer.Description}"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Left"
                             Foreground="LightGray"
@@ -66,7 +66,7 @@
             </ui:DynamicScrollViewer>
         </StackPanel>
 
-            <ui:Image Source="{Binding Developer.image_background}"
+            <ui:Image Source="{Binding Developer.ImageBackground}"
                         Grid.Column="2"
                         Grid.Row="1"
                         Stretch="Uniform"

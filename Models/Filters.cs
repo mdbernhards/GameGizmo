@@ -1,8 +1,6 @@
-﻿using GameGizmo.Core;
-using GameGizmo.HelperModels;
-using GameGizmo.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace GameGizmo.MVVM.Model
+namespace GameGizmo.Models
 {
     internal class Filters : ObservableObject
     {

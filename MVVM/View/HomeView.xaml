@@ -31,12 +31,12 @@
 
                 <Grid>
                     <StackPanel>
-                        <TextBlock Text="World leader&#x0a;in global finance"
+                        <TextBlock Text="Top Games&#x0a;All time"
                                    Foreground="White"
                                    FontSize="28"
                                    Margin="20,10,10,0"
                    FontFamily="/Fonts/#Poppins"/>
-                        <TextBlock Text="Get Started Today"
+                        <TextBlock Text="Check it out!"
                                    Foreground="White"
                                    FontSize="18"
                                    Margin="20,10,10,0"

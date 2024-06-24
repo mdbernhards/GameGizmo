@@ -1,6 +1,4 @@
-﻿using GameGizmo.HelperModels;
-using GameGizmo.Models;
-using GameGizmo.MVVM.Model;
+﻿using GameGizmo.Models;
 
 namespace GameGizmo.Logic.Interfaces
 {
@@ -14,9 +12,11 @@ namespace GameGizmo.Logic.Interfaces
 
         Task<ListOfGames?> GetSearch(ApiParameters parameters);
 
-        Task<Game?> GameQuery(int? gameId);
+        Task<GameData?> GameQuery(int? gameId);
 
-        Task<Developer?> DeveloperQuery(int? developerId);
+        Task<ListOfGameScreenshots?> GameScreenshotQuery(int? gameId);
+
+        Task<DeveloperData?> DeveloperQuery(int? developerId);
 
         Task<ListOfDevelopers?> ListOfDevelopersQuery(int? pageNumber, int? pageSize);
 

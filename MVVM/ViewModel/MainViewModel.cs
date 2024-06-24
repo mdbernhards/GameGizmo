@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using GameGizmo.Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using GameGizmo.Enums;
 using GameGizmo.Logic;
 using GameGizmo.Logic.Interfaces;
@@ -9,50 +10,19 @@ namespace GameGizmo.MVVM.ViewModel
 {
     internal class MainViewModel : ObservableObject
     {
-        public DeveloperViewModel Developer { get; set; }
-
-        public GameViewModel Game { get; set; }
-
-        public HomeViewModel? Home { get; set; }
-
-        public SearchResultsViewModel SearchResults { get; set; }
-
         public IApiLogic ApiLogic { get; set; }
 
-        public RelayCommand HomeViewCommand { get; set; }
+        public IApiToViewMapper ApiToViewMapper { get; set; }
 
-        public RelayCommand SearchResultsViewCommand { get; set; }
-
-        public RelayCommand TopGamesViewCommand { get; set; }
-
-        public RelayCommand NewestGamesViewCommand { get; set; }
-
-        public RelayCommand HottestGamesViewCommand { get; set; }
-
-        public RelayCommand ListOfDevelopersViewCommand { get; set; }
-
-        private string searchText = string.Empty;
-
-        public string SearchText
-        {
-            get { return searchText; }
-            set
-            {
-                if (!string.Equals(searchText, value))
-                {
-                    searchText = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        public Main Main { get; set; } = new Main();
 
         private object? _currentView;
 
         public object? CurrentView
         {
             get { return _currentView; }
-            set 
-            { 
+            set
+            {
                 _currentView = value;
                 OnPropertyChanged();
             }
@@ -60,63 +30,70 @@ namespace GameGizmo.MVVM.ViewModel
 
         public MainViewModel()
         {
-            WeakReferenceMessenger.Default.Register<Result>(this, SetGameView);
+            WeakReferenceMessenger.Default.Register<Game>(this, SetGameView);
             WeakReferenceMessenger.Default.Register<Developer>(this, SetDeveloperView);
+
             ApiLogic = new ApiLogic();
+            ApiToViewMapper = new ApiToViewMapper();
 
-            Home = new HomeViewModel();
-            SearchResults = new SearchResultsViewModel(ApiLogic);
-            Game = new GameViewModel(ApiLogic);
-            Developer = new DeveloperViewModel(ApiLogic);
+            Main.Home = new HomeViewModel(ApiLogic, ApiToViewMapper);
+            Main.SearchResults = new SearchResultsViewModel(ApiLogic, ApiToViewMapper);
+            Main.Game = new GameViewModel(ApiLogic, ApiToViewMapper);
+            Main.Developer = new DeveloperViewModel(ApiLogic, ApiToViewMapper);
 
-            CurrentView = Home;
+            SetUpRelayCommands();
 
-            HomeViewCommand = new RelayCommand(x =>
-            {
-                CurrentView = Home;
-            });
-
-            SearchResultsViewCommand = new RelayCommand(x =>
-            {
-                SearchResults.GetGameList(GameListType.Search, SearchText);
-                CurrentView = SearchResults;
-            });
-
-            TopGamesViewCommand = new RelayCommand(x =>
-            {
-                SearchResults.GetGameList(GameListType.TopGamesOfAllTime);
-                CurrentView = SearchResults;
-            });
-
-            NewestGamesViewCommand = new RelayCommand(x =>
-            {
-                SearchResults.GetGameList(GameListType.NewestGames);
-                CurrentView = SearchResults;
-            });
-
-            HottestGamesViewCommand = new RelayCommand(x =>
-            {
-                SearchResults.GetGameList(GameListType.HottestGames);
-                CurrentView = SearchResults;
-            });
-
-            ListOfDevelopersViewCommand = new RelayCommand(x =>
-            {
-                SearchResults.GetDeveloperList();
-                CurrentView = SearchResults;
-            });
+            CurrentView = Main.Home;
         }
 
-        public void SetGameView(object recipient, Result game)
+        public void SetGameView(object recipient, Game game)
         {
-            Game.GetGameView(game.id);
-            CurrentView = Game;
+            Main.Game?.GetGameView(game.Id);
+            CurrentView = Main.Game;
         }
 
         public void SetDeveloperView(object recipient, Developer developer)
         {
-            Developer.GetDeveloperView(developer.id);
-            CurrentView = Developer;
+            Main.Developer?.GetDeveloperView(developer.Id);
+            CurrentView = Main.Developer;
+        }
+
+        private void SetUpRelayCommands()
+        {
+            Main.HomeViewCommand = new RelayCommand<object>(x =>
+            {
+                CurrentView = Main.Home;
+            });
+
+            Main.SearchResultsViewCommand = new RelayCommand<object>(x =>
+            {
+                Main.SearchResults?.GetGameList(GameListType.Search, Main.SearchText);
+                CurrentView = Main.SearchResults;
+            });
+
+            Main.TopGamesViewCommand = new RelayCommand<object>(x =>
+            {
+                Main.SearchResults?.GetGameList(GameListType.TopGamesOfAllTime);
+                CurrentView = Main.SearchResults;
+            });
+
+            Main.NewestGamesViewCommand = new RelayCommand<object>(x =>
+            {
+                Main.SearchResults?.GetGameList(GameListType.NewestGames);
+                CurrentView = Main.SearchResults;
+            });
+
+            Main.HottestGamesViewCommand = new RelayCommand<object>(x =>
+            {
+                Main.SearchResults?.GetGameList(GameListType.HottestGames);
+                CurrentView = Main.SearchResults;
+            });
+
+            Main.ListOfDevelopersViewCommand = new RelayCommand<object>(x =>
+            {
+                Main.SearchResults?.GetDeveloperList();
+                CurrentView = Main.SearchResults;
+            });
         }
     }
 }

@@ -9,13 +9,13 @@
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
     <Grid>
-        <ui:LoadingScreen Visibility="{Binding LoadingData.LoadingVisibility}"
+        <ui:LoadingScreen Visibility="{Binding Game.LoadingData.LoadingVisibility}"
                           ui:Foreground="White"
                           BorderBrush="Aqua">
             <TextBlock Text="Loading.."
                        FontSize="40"/>
         </ui:LoadingScreen>
-        <Grid Visibility="{Binding LoadingData.ContentVisibility}">
+        <Grid Visibility="{Binding Game.LoadingData.ContentVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="450"/>
@@ -29,9 +29,9 @@
             </Grid.RowDefinitions>
 
             <Grid.Background>
-                <ImageBrush ImageSource="{Binding Game.background_image}" Opacity="0.1"/>
+                <ImageBrush ImageSource="{Binding Game.BackgroundImage}" Opacity="0.1"/>
             </Grid.Background>
-            <TextBlock Text="{Binding Game.name}"
+            <TextBlock Text="{Binding Game.Name}"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom"
@@ -53,7 +53,7 @@
                 <ui:DynamicScrollViewer VerticalScrollBarVisibility="Auto"
                                 Height="220"
                                 Width="450" >
-                    <TextBlock Text="{Binding Game.description}"
+                    <TextBlock Text="{Binding Game.Description}"
                                 VerticalAlignment="Top"
                                 HorizontalAlignment="Left"
                                 Foreground="LightGray"
@@ -68,7 +68,7 @@
             <Grid Grid.Row="2"
                   Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="80"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
@@ -91,30 +91,24 @@
                                FontSize="12"
                                Margin="5,5,0,0"
                                FontFamily="/Fonts/#Poppins"/>
-                    <TextBlock Text="{Binding Game.released}"
+                    <TextBlock Text="{Binding Game.Released}"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left"
                                Foreground="LightGray"
                                FontSize="10"
-                               Margin="5,23,0,0"
+                               Margin="5,20,0,0"
                                FontFamily="/Fonts/#Poppins"/>
 
-                    <TextBlock Text="Platforms"
-                               VerticalAlignment="Top"
-                               HorizontalAlignment="Left"
-                               Foreground="White"
-                               FontSize="12"
-                               Margin="5,5,0,0"
-                               FontFamily="/Fonts/#Poppins"
-                               Grid.Column="1"/>
-                    <TextBlock Text="{Binding Game.released}"
-                               VerticalAlignment="Top"
-                               HorizontalAlignment="Left"
-                               Foreground="LightGray"
-                               FontSize="10"
-                               Margin="5,23,0,0"
-                               FontFamily="/Fonts/#Poppins"
-                               Grid.Column="1"/>
+                    <TextBlock VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           Foreground="White"
+                           FontSize="12"
+                           Margin="5,5,0,0"
+                           FontFamily="/Fonts/#Poppins"
+                           Grid.Column="1">
+                    <Hyperlink NavigateUri="{Binding Game.Website}"
+                               RequestNavigate="Url_Click">Website</Hyperlink>
+                    </TextBlock>
 
                     <TextBlock Text="Metacritic"
                                VerticalAlignment="Top"
@@ -125,12 +119,12 @@
                                FontFamily="/Fonts/#Poppins"
                                Grid.Column="0"
                                Grid.Row="1"/>
-                    <TextBlock Text="{Binding Game.metacritic}"
+                    <TextBlock Text="{Binding Game.Metacritic}"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left"
                                Foreground="LightGray"
                                FontSize="10"
-                               Margin="5,23,0,0"
+                               Margin="5,20,0,0"
                                FontFamily="/Fonts/#Poppins"
                                Grid.Column="0"
                                Grid.Row="1"/>
@@ -144,37 +138,88 @@
                                FontFamily="/Fonts/#Poppins"
                                Grid.Column="1"
                                Grid.Row="1"/>
-                    <TextBlock Text="{Binding Game.rating}"
+                    <TextBlock Text="{Binding Game.Rating}"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left"
                                Foreground="LightGray"
                                FontSize="10"
-                               Margin="5,23,0,0"
+                               Margin="5,20,0,0"
                                FontFamily="/Fonts/#Poppins"
                                Grid.Column="1"
                                Grid.Row="1"/>
                 </Grid>
 
-                <TextBlock VerticalAlignment="Top"
+                <TextBlock Text="Platforms"
+                           VerticalAlignment="Top"
                            HorizontalAlignment="Left"
                            Foreground="White"
                            FontSize="12"
-                           Margin="5,5,0,0"
+                           Margin="5,0,0,0"
                            FontFamily="/Fonts/#Poppins"
-                           Grid.Row="1">
-                    <Hyperlink NavigateUri="{Binding Game.website}"
-                               RequestNavigate="Url_Click">Website</Hyperlink>
-                </TextBlock>
+                           Grid.Row="1"/>
+                <TextBlock Text="{Binding Game.Platforms}"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           Foreground="LightGray"
+                           FontSize="10"
+                           Margin="5,19,0,0"
+                           FontFamily="/Fonts/#Poppins"
+                           Grid.Row="1"
+                           MaxWidth="225"
+                           TextWrapping="Wrap"/>
             </Grid>
-            
-            <ui:Image Source="{Binding Game.background_image}"
+
+            <ui:Image Source="{Binding Game.BackgroundImage}"
                         Grid.Column="2"
                         Grid.Row="1"
                         Stretch="Uniform"
                         MaxHeight="240"
                         Width="240"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
+                        VerticalAlignment="Center">
+                <ui:Image.ToolTip>
+                    <ToolTip DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}" MaxWidth="1300" MaxHeight="1300">
+                        <Border BorderBrush="Black" BorderThickness="1" Margin="5,7,5,5">
+                            <Image Source="{Binding Source}" Stretch="Uniform" ToolTipService.Placement="Top"/>
+                        </Border>
+                    </ToolTip>
+                </ui:Image.ToolTip>
+            </ui:Image>
+            
+            <ListView HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Stretch"
+                      Grid.Column="1"
+                      Grid.Row="2"
+                      Background="Transparent"
+                      ItemsSource="{Binding Game.GameScreenshots}" 
+                      d:ItemsSource="{d:SampleData ItemCount=5}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="{Binding Game.ScreenshotCount}"
+                                     HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ui:Image Source="{Binding image}" 
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"
+                                  Stretch="Uniform"
+                                  MaxHeight="100"
+                                  Width="100">
+                            <ui:Image.ToolTip>
+                                <ToolTip DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}" 
+                                         MaxWidth="1300" 
+                                         MaxHeight="1300">
+                                    <Border BorderBrush="Black" BorderThickness="1" Margin="5,7,5,5">
+                                        <Image Source="{Binding Source}" Stretch="Uniform" ToolTipService.Placement="Top"/>
+                                    </Border>
+                                </ToolTip>
+                            </ui:Image.ToolTip>
+                        </ui:Image>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </UserControl>

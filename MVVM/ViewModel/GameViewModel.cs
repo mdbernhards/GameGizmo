@@ -1,15 +1,17 @@
-﻿using GameGizmo.Core;
-using GameGizmo.HelperModels;
-using GameGizmo.Logic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using GameGizmo.Logic.Interfaces;
 using GameGizmo.MVVM.Model;
 using System.Text.RegularExpressions;
 
 namespace GameGizmo.MVVM.ViewModel
 {
-    internal class GameViewModel(IApiLogic apiLogic) : ObservableObject
+    internal class GameViewModel(IApiLogic apiLogic, IApiToViewMapper apiToViewMapper) : ObservableObject
     {
-        private Game? game;
+        public IApiLogic ApiLogic { get; set; } = apiLogic;
+
+        public IApiToViewMapper ApiToViewMapper { get; set; } = apiToViewMapper;
+
+        private Game? game = new();
         public Game? Game
         {
             get { return game; }
@@ -21,14 +23,13 @@ namespace GameGizmo.MVVM.ViewModel
 
                     if (game != null)
                     {
-                        if (game.description == null || game.description == string.Empty)
+                        if (game.Description == null || game.Description == string.Empty)
                         {
-                            game.description = "No description found!";
+                            game.Description = "No description found!";
                         }
                         else
                         {
-                            Regex rgx = new Regex("<p>|</p>");
-                            game.description = Regex.Replace(game.description, @"<[^>]*>", String.Empty);
+                            game.Description = Regex.Replace(game.Description, @"<[^>]*>", String.Empty);
                         }
 
                         OnPropertyChanged();
@@ -36,22 +37,21 @@ namespace GameGizmo.MVVM.ViewModel
                 }
             }
         }
-        public IApiLogic ApiLogic { get; set; } = apiLogic;
-
-        public LoadingData LoadingData { get; set; } = new LoadingData();
 
         public async void GetGameView(int? gameId)
         {
-            if (gameId == null)
+            if (gameId == null || Game == null)
             {
                 return;
             }
 
-            LoadingData.IsLoading = true;
+            Game.LoadingData.IsLoading = true;
+            var tempGame = await ApiLogic.GameQuery(gameId);
+            var tempScreenshots = await ApiLogic.GameScreenshotQuery(gameId);
 
-            Game = await ApiLogic.GameQuery(gameId);
+            Game = ApiToViewMapper.MapToGame(tempGame ?? new(), tempScreenshots?.results ?? []);
 
-            LoadingData.IsLoading = false;
+            Game.LoadingData.IsLoading = false;
         }
     }
 }

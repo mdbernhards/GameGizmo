@@ -20,18 +20,18 @@ namespace GameGizmo.MVVM.View
         {
             var item = ((ListViewItem)sender).Content;
 
-            if (item is Result game)
+            if (item is Game game)
             {
                 if (DataContext is SearchResultsViewModel vm)
                 {
-                    vm.SelectedGame = game;
+                    vm.Search.SelectedGame = game;
                 }
             }
             else if (item is Developer developer)
             {
                 if (DataContext is SearchResultsViewModel vm)
                 {
-                    vm.SelectedDeveloper = developer;
+                    vm.Search.SelectedDeveloper = developer;
                 }
             }
 

@@ -8,13 +8,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ui:LoadingScreen Visibility="{Binding LoadingData.LoadingVisibility}"
+        <ui:LoadingScreen Visibility="{Binding Search.LoadingData.LoadingVisibility}"
                       ui:Foreground="White"
                       BorderBrush="Aqua">
             <TextBlock Text="Loading.."
                    FontSize="40"/>
         </ui:LoadingScreen>
-        <Grid Visibility="{Binding LoadingData.ContentVisibility}">
+        <Grid Visibility="{Binding Search.LoadingData.ContentVisibility}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="410"/>
                 <RowDefinition/>
@@ -26,16 +26,16 @@
             </Grid.ColumnDefinitions>
         
             <ui:ListView Name="GameListView" 
-                        ItemsSource="{Binding GameList}"
-                        Visibility="{Binding GameListVisibility}"
+                        ItemsSource="{Binding Search.GameList}"
+                        Visibility="{Binding Search.GameListVisibility}"
                         Width="548">
                 <ui:ListView.View>
                     <ui:GridView x:Name="GameListGridView">
-                        <GridViewColumn Width="220" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
-                        <GridViewColumn Width="100" Header="Released" DisplayMemberBinding="{Binding Path=released}" />
-                        <GridViewColumn Width="80" Header="Metacritic" DisplayMemberBinding="{Binding Path=metacritic}" />
-                        <GridViewColumn Width="50" Header="Rating" DisplayMemberBinding="{Binding Path=rating}"/>
-                        <GridViewColumn Width="70" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
+                        <GridViewColumn Width="220" Header="Name" DisplayMemberBinding="{Binding Path=Name}" />
+                        <GridViewColumn Width="100" Header="Released" DisplayMemberBinding="{Binding Path=Released}" />
+                        <GridViewColumn Width="80" Header="Metacritic" DisplayMemberBinding="{Binding Path=Metacritic}" />
+                        <GridViewColumn Width="50" Header="Rating" DisplayMemberBinding="{Binding Path=Rating}"/>
+                        <GridViewColumn Width="70" Header="Id" DisplayMemberBinding="{Binding Path=Id}"/>
                     </ui:GridView>
                 </ui:ListView.View>
                 <ListView.ItemContainerStyle>
@@ -51,14 +51,14 @@
                 </ListView.ItemContainerStyle>
             </ui:ListView>
             <ui:ListView Name="DeveloperListView" 
-                        ItemsSource="{Binding DeveloperList}"
-                        Visibility="{Binding DeveloperListVisibility}"
+                        ItemsSource="{Binding Search.DeveloperList}"
+                        Visibility="{Binding Search.DeveloperListVisibility}"
                         Width="530">
                 <ui:ListView.View>
                     <ui:GridView x:Name="DeveloperListGridView">
-                        <GridViewColumn Width="300" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
-                        <GridViewColumn Width="120" Header="Game Count" DisplayMemberBinding="{Binding Path=games_count}" />
-                        <GridViewColumn Width="50" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
+                        <GridViewColumn Width="300" Header="Name" DisplayMemberBinding="{Binding Path=Name}" />
+                        <GridViewColumn Width="120" Header="Game Count" DisplayMemberBinding="{Binding Path=GamesCount}" />
+                        <GridViewColumn Width="50" Header="Id" DisplayMemberBinding="{Binding Path=Id}"/>
                     </ui:GridView>
                 </ui:ListView.View>
                 <ListView.ItemContainerStyle>
@@ -78,7 +78,7 @@
                                     Height="410"
                                     Width="165" 
                                     Grid.Column="1"
-                                    Visibility="{Binding GameListVisibility}">
+                                    Visibility="{Binding Search.GameListVisibility}">
                 <StackPanel Width="160">
                     <TextBlock Text="Filter"
                             VerticalAlignment="Top"
@@ -95,8 +95,8 @@
                             FontSize="13"
                             Margin="0,15,0,10"
                             FontFamily="/Fonts/#Poppins"/>
-                    <ComboBox ItemsSource="{Binding Filters.SortOrderOptions}"
-                              SelectedItem="{Binding Filters.SortOrder}"
+                    <ComboBox ItemsSource="{Binding Search.Filters.SortOrderOptions}"
+                              SelectedItem="{Binding Search.Filters.SortOrder}"
                               SelectedValuePath="Key"
                               DisplayMemberPath="Value"
                               Margin="0,0,10,0"/>
@@ -108,8 +108,8 @@
                             FontSize="13"
                             Margin="0,15,0,10"
                             FontFamily="/Fonts/#Poppins"/>
-                    <ComboBox ItemsSource="{Binding Filters.PageSizeOptions}"
-                              SelectedItem="{Binding Filters.PageSize}"
+                    <ComboBox ItemsSource="{Binding Search.Filters.PageSizeOptions}"
+                              SelectedItem="{Binding Search.Filters.PageSize}"
                               Margin="0,0,10,0"/>
 
                     <TextBlock Text="Genres"
@@ -124,7 +124,7 @@
                              Width="140"
                              BorderThickness="3"
                              BorderBrush="DarkBlue"
-                             ItemsSource="{Binding Filters.ListOfGenres}">
+                             ItemsSource="{Binding Search.Filters.ListOfGenres}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="1"/>
@@ -149,7 +149,7 @@
                             FontSize="13"
                             Margin="0,15,0,10"
                             FontFamily="/Fonts/#Poppins"/>
-                    <DatePicker SelectedDate="{Binding Filters.ReleaseRangeFrom}"
+                    <DatePicker SelectedDate="{Binding Search.Filters.ReleaseRangeFrom}"
                                 SelectedDateFormat="Short"
                                 Margin="0,0,10,0"/>
                     <TextBlock Text="Released to"
@@ -159,7 +159,7 @@
                             FontSize="13"
                             Margin="0,15,0,10"
                             FontFamily="/Fonts/#Poppins"/>
-                    <DatePicker SelectedDate="{Binding Filters.ReleaseRangeTo}"
+                    <DatePicker SelectedDate="{Binding Search.Filters.ReleaseRangeTo}"
                                 SelectedDateFormat="Short"
                                 Margin="0,0,10,0"/>
                 
@@ -175,7 +175,7 @@
                              Width="140"
                              BorderThickness="3"
                              BorderBrush="DarkBlue"
-                             ItemsSource="{Binding Filters.ListOfPlatforms}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                             ItemsSource="{Binding Search.Filters.ListOfPlatforms}" d:ItemsSource="{d:SampleData ItemCount=5}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="1"/>
@@ -205,7 +205,7 @@
                              Width="140"
                              BorderThickness="3"
                              BorderBrush="DarkBlue"
-                             ItemsSource="{Binding Filters.ListOfStores}">
+                             ItemsSource="{Binding Search.Filters.ListOfStores}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="1"/>
@@ -235,7 +235,7 @@
                                 Margin="0,0,10,0">
                         <ui:TextBox HorizontalAlignment="Stretch"
                                     Width="70"
-                                    Text="{Binding Filters.MetacriticScoreFrom}"
+                                    Text="{Binding Search.Filters.MetacriticScoreFrom}"
                                     PreviewTextInput="NumberValidationTextBox"/>
                         <TextBlock Text=" - "
                                    Foreground="White"
@@ -243,7 +243,7 @@
                                    FontSize="13"/>
                         <ui:TextBox HorizontalAlignment="Stretch"
                                     Width="70"
-                                    Text="{Binding Filters.MetacriticScoreTo}"
+                                    Text="{Binding Search.Filters.MetacriticScoreTo}"
                                     PreviewTextInput="NumberValidationTextBox"/>
                     </StackPanel>
 
@@ -264,14 +264,14 @@
                         Width="45"
                         Margin="6,0,6,0"
                         Content="&lt;&lt;"
-                        Command="{Binding FirstPageViewCommand}"></ui:Button>
+                        Command="{Binding Search.FirstPageViewCommand}"></ui:Button>
                 <Button Height="30"
                         Width="45"
                         Margin="6,0,6,0"
                         Content="&lt;"
-                        Command="{Binding PreviousPageViewCommand}"></Button>
-             
-                <TextBlock Text="{Binding Filters.PageNumber}"
+                        Command="{Binding Search.PreviousPageViewCommand}"></Button>
+
+                <TextBlock Text="{Binding Search.Filters.PageNumber}"
                            FontSize="15"
                            Margin="12"
                            Foreground="White"
@@ -282,12 +282,12 @@
                         Width="45"
                         Margin="6,0,6,0"
                         Content="&gt;"
-                        Command="{Binding NextPageViewCommand}"></Button>
+                        Command="{Binding Search.NextPageViewCommand}"></Button>
                 <Button Height="30"
                         Width="45"
                         Margin="6,0,6,0"
                         Content="&gt;&gt;"
-                        Command="{Binding LastPageViewCommand}"></Button>
+                        Command="{Binding Search.LastPageViewCommand}"></Button>
             </StackPanel>
         </Grid>
     </Grid>

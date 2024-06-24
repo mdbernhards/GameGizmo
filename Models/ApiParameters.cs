@@ -20,6 +20,8 @@
 
         public List<int?>? GenresIds { get; set; }
 
+        public List<int?>? DeveloperIds { get; set; }
+
         public string? MetacriticScore { get; set; }
 
         public ApiParameters() { }

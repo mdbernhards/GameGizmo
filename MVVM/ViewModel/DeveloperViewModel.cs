@@ -1,15 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using GameGizmo.HelperModels;
-using GameGizmo.Logic;
 using GameGizmo.Logic.Interfaces;
 using GameGizmo.MVVM.Model;
 using System.Text.RegularExpressions;
 
 namespace GameGizmo.MVVM.ViewModel
 {
-    internal class DeveloperViewModel(IApiLogic apiLogic) : ObservableObject
+    internal class DeveloperViewModel(IApiLogic apiLogic, IApiToViewMapper apiToViewMapper) : ObservableObject
     {
-        private Developer? developer;
+        public IApiLogic ApiLogic { get; set; } = apiLogic;
+
+        public IApiToViewMapper ApiToViewMapper { get; set; } = apiToViewMapper;
+
+        private Developer? developer = new();
         public Developer? Developer
         {
             get { return developer; }
@@ -21,14 +23,13 @@ namespace GameGizmo.MVVM.ViewModel
 
                     if (developer != null)
                     {
-                        if (developer.description == null || developer.description == string.Empty)
+                        if (developer.Description == null || developer.Description == string.Empty)
                         {
-                            developer.description = "No description found!";
+                            developer.Description = "No description found!";
                         }
                         else
                         {
-                            Regex rgx = new Regex("<p>|</p>");
-                            developer.description = Regex.Replace(developer.description, @"<[^>]*>", String.Empty);
+                            developer.Description = Regex.Replace(developer.Description, @"<[^>]*>", String.Empty);
                         }
 
 
@@ -38,21 +39,20 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
-        public IApiLogic ApiLogic { get; set; } = apiLogic;
-
-        public LoadingData LoadingData { get; set; } = new LoadingData();
-
         public async void GetDeveloperView(int? developerId)
         {
-            if (developerId == null)
+            if (developerId == null || Developer == null)
             {
                 return;
             }
 
-            LoadingData.IsLoading = true;
-            Developer = await ApiLogic.DeveloperQuery(developerId);
+            Developer.LoadingData.IsLoading = true;
 
-            LoadingData.IsLoading = false;
+            var tempDevData = await ApiLogic.DeveloperQuery(developerId);
+            var tempGameData = await ApiLogic.GetSearch(new Models.ApiParameters { DeveloperIds = [developerId] });
+            Developer = ApiToViewMapper.MapToDeveloper(tempDevData ?? new Models.DeveloperData(), tempGameData ?? new Models.ListOfGames());
+
+            Developer.LoadingData.IsLoading = false;
         }
     }
 }

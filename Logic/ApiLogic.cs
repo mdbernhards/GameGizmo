@@ -1,7 +1,5 @@
-﻿using GameGizmo.HelperModels;
-using GameGizmo.Logic.Interfaces;
+﻿using GameGizmo.Logic.Interfaces;
 using GameGizmo.Models;
-using GameGizmo.MVVM.Model;
 using System.Net.Http;
 
 namespace GameGizmo.Logic
@@ -49,7 +47,7 @@ namespace GameGizmo.Logic
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<Game?> GameQuery(int? gameId)
+        public async Task<GameData?> GameQuery(int? gameId)
         {
             string query = $"https://api.rawg.io/api/games/" + gameId + $"?key=" + Key;
             var httpClient = new HttpClient();
@@ -57,13 +55,27 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new Game();
+                return new GameData();
             }
 
-            return await response.Content.ReadAsAsync<Game?>();
+            return await response.Content.ReadAsAsync<GameData?>();
         }
 
-        public async Task<Developer?> DeveloperQuery(int? developerId)
+        public async Task<ListOfGameScreenshots?> GameScreenshotQuery(int? gameId)
+        {
+            string query = $"https://api.rawg.io/api/games/" + gameId + $"/screenshots?key=" + Key + "&page_size=15";
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(query));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ListOfGameScreenshots();
+            }
+
+            return await response.Content.ReadAsAsync<ListOfGameScreenshots?>();
+        }
+
+        public async Task<DeveloperData?> DeveloperQuery(int? developerId)
         {
             string query = $"https://api.rawg.io/api/developers/" + developerId + $"?key=" + Key;
             var httpClient = new HttpClient();
@@ -71,10 +83,10 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new Developer();
+                return new DeveloperData();
             }
 
-            return await response.Content.ReadAsAsync<Developer?>();
+            return await response.Content.ReadAsAsync<DeveloperData?>();
         }
 
         public async Task<ListOfDevelopers?> ListOfDevelopersQuery(int? pageNumber, int? pageSize)
@@ -207,6 +219,11 @@ namespace GameGizmo.Logic
             if (parameters.GenresIds != null && parameters.GenresIds.Count > 0)
             {
                 query += "&genres=" + GetParametersFromList(parameters.GenresIds);
+            }
+
+            if (parameters.DeveloperIds != null && parameters.DeveloperIds.Count > 0)
+            {
+                query += "&developers=" + GetParametersFromList(parameters.DeveloperIds);
             }
 
             if (parameters.MetacriticScore != null && parameters.MetacriticScore != string.Empty)

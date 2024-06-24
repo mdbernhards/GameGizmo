@@ -1,7 +1,7 @@
-﻿using GameGizmo.Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
-namespace GameGizmo.HelperModels
+namespace GameGizmo.Models
 {
     internal class LoadingData : ObservableObject
     {

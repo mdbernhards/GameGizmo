@@ -1,12 +1,23 @@
-﻿namespace GameGizmo.MVVM.Model
+﻿using GameGizmo.Models;
+
+namespace GameGizmo.MVVM.Model
 {
-    public class Developer
+    internal class Developer
     {
-        public int? id { get; set; }
-        public string? name { get; set; }
-        public string? slug { get; set; }
-        public int? games_count { get; set; }
-        public string? image_background { get; set; }
-        public string? description { get; set; }
+        public int? Id { get; set; }
+
+        public string? Name { get; set; }
+
+        public int? GamesCount { get; set; }
+
+        public string? ImageBackground { get; set; }
+
+        public string? Description { get; set; }
+
+        public List<GameData>? Games { get; set; }
+
+        public int? GameListCount { get; set; }
+
+        public LoadingData LoadingData { get; set; } = new LoadingData();
     }
 }
