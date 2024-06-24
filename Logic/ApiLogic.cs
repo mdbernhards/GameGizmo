@@ -1,11 +1,12 @@
 ﻿using GameGizmo.HelperModels;
+using GameGizmo.Logic.Interfaces;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
 using System.Net.Http;
 
 namespace GameGizmo.Logic
 {
-    public class ApiLogic
+    public class ApiLogic : IApiLogic
     {
         private readonly string Key = $"a84e3588362f461a95f7e1d63069c9b5";
 
@@ -22,68 +23,30 @@ namespace GameGizmo.Logic
             Client = new();
         }
 
-        public async Task<ListOfGames?> Test()
+        public async Task<ListOfGames?> GetHighestRatedGames(ApiParameters parameters)
         {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, path);
-            var response = await Client.SendAsync(requestMessage);
-
-            var result = await response.Content.ReadAsAsync<ListOfGames?>();
-            return result;
+            parameters.ordering ??= "-metacritic";
+            return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> GetHighestRatedGames(int? pageNumber, int? pageSize)
+        public async Task<ListOfGames?> GetNewestGames(ApiParameters parameters)
         {
-            var parameters = new ApiParameters
-            {
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                ordering = "-metacritic"
-            };
+            parameters.ordering ??= "-released";
+            return await ListOfGamesQuery(parameters);
+        }
+
+        public async Task<ListOfGames?> GetHottestGames(ApiParameters parameters)
+        {
+
+            parameters.dates ??= DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "," + DateTime.Now.ToString("yyyy-MM-dd");
+            parameters.ordering ??= "-added";
 
             return await ListOfGamesQuery(parameters);
         }
 
-        public async Task<ListOfGames?> GetNewestGames(int? pageNumber, int? pageSize)
-        {
-            var parameters = new ApiParameters
-            {
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                ordering = "added"
-            };
-
-            return await ListOfGamesQuery(parameters);
-        }
-
-        public async Task<ListOfGames?> GetHottestGames(int? pageNumber, int? pageSize)
-        {
-            var parameters = new ApiParameters
-            {
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                dates = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "," + DateTime.Now.ToString("yyyy-MM-dd"),
-                ordering = "-added"
-            };
-
-            return await ListOfGamesQuery(parameters);
-        }
-
-        public async Task<ListOfGames?> GetSimpleSearch(ApiParameters parameters)
+        public async Task<ListOfGames?> GetSearch(ApiParameters parameters)
         {
             return await ListOfGamesQuery(parameters);
-        }
-
-        public async Task<ListOfGames?> ListOfGamesQuery(ApiParameters parameters)
-        {
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(CreateUri(parameters));
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return new ListOfGames();
-            }
-
-            return await response.Content.ReadAsAsync<ListOfGames?>();
         }
 
         public async Task<Game?> GameQuery(int? gameId)
@@ -178,6 +141,19 @@ namespace GameGizmo.Logic
             }
 
             return await response.Content.ReadAsAsync<ListOfGenres?>();
+        }
+
+        private async Task<ListOfGames?> ListOfGamesQuery(ApiParameters parameters)
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(CreateUri(parameters));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ListOfGames();
+            }
+
+            return await response.Content.ReadAsAsync<ListOfGames?>();
         }
 
         private Uri CreateUri(ApiParameters parameters)

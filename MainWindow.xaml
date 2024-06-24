@@ -45,7 +45,7 @@
                              Style="{StaticResource MenuButtonTheme}" Width="170"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}"/>
-                <RadioButton Content="Newest Releases"
+                <RadioButton Content="Upcoming Releases"
                              Height="50"
                              Foreground="White"
                              FontSize="14"

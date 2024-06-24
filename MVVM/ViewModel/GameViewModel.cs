@@ -1,12 +1,13 @@
 ﻿using GameGizmo.Core;
 using GameGizmo.HelperModels;
 using GameGizmo.Logic;
+using GameGizmo.Logic.Interfaces;
 using GameGizmo.MVVM.Model;
 using System.Text.RegularExpressions;
 
 namespace GameGizmo.MVVM.ViewModel
 {
-    internal class GameViewModel(ApiLogic apiLogic) : ObservableObject
+    internal class GameViewModel(IApiLogic apiLogic) : ObservableObject
     {
         private Game? game;
         public Game? Game
@@ -35,7 +36,7 @@ namespace GameGizmo.MVVM.ViewModel
                 }
             }
         }
-        public ApiLogic ApiLogic { get; set; } = apiLogic;
+        public IApiLogic ApiLogic { get; set; } = apiLogic;
 
         public LoadingData LoadingData { get; set; } = new LoadingData();
 

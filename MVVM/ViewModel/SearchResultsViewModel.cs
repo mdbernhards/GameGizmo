@@ -3,6 +3,7 @@ using GameGizmo.Core;
 using GameGizmo.Enums;
 using GameGizmo.HelperModels;
 using GameGizmo.Logic;
+using GameGizmo.Logic.Interfaces;
 using GameGizmo.Models;
 using GameGizmo.MVVM.Model;
 using System.Collections.ObjectModel;
@@ -46,7 +47,7 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
-        public ApiLogic ApiLogic { get; set; }
+        public IApiLogic ApiLogic { get; set; }
 
         private bool isGameListVisible = false;
         public bool IsGameListVisible
@@ -97,7 +98,7 @@ namespace GameGizmo.MVVM.ViewModel
 
         public LoadingData LoadingData { get; set; } = new LoadingData();
 
-        public SearchResultsViewModel(ApiLogic apiLogic)
+        public SearchResultsViewModel(IApiLogic apiLogic)
         {
             ApiLogic = apiLogic;
 
@@ -149,11 +150,11 @@ namespace GameGizmo.MVVM.ViewModel
 
             ListOfGames? results = listType switch
             {
-                GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(Filters.PageNumber, Filters.PageSize),
-                GameListType.NewestGames => await ApiLogic.GetNewestGames(Filters.PageNumber, Filters.PageSize),
-                GameListType.HottestGames => await ApiLogic.GetHottestGames(Filters.PageNumber, Filters.PageSize),
-                GameListType.Search => await ApiLogic.GetSimpleSearch(parameters),
-                _ => await ApiLogic.Test(),
+                GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(parameters),
+                GameListType.NewestGames => await ApiLogic.GetNewestGames(parameters),
+                GameListType.HottestGames => await ApiLogic.GetHottestGames(parameters),
+                GameListType.Search => await ApiLogic.GetSearch(parameters),
+                _ => await ApiLogic.GetHighestRatedGames(parameters),
             };
 
             AddNewGames(results);

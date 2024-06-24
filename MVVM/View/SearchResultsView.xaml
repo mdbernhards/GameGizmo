@@ -31,11 +31,11 @@
                         Width="548">
                 <ui:ListView.View>
                     <ui:GridView x:Name="GameListGridView">
-                        <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
-                        <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
-                        <GridViewColumn Width="Auto" Header="Released" DisplayMemberBinding="{Binding Path=released}" />
-                        <GridViewColumn Width="Auto" Header="Metacritic" DisplayMemberBinding="{Binding Path=metacritic}" />
-                        <GridViewColumn Width="Auto" Header="Rating" DisplayMemberBinding="{Binding Path=rating}"/>
+                        <GridViewColumn Width="220" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
+                        <GridViewColumn Width="100" Header="Released" DisplayMemberBinding="{Binding Path=released}" />
+                        <GridViewColumn Width="80" Header="Metacritic" DisplayMemberBinding="{Binding Path=metacritic}" />
+                        <GridViewColumn Width="50" Header="Rating" DisplayMemberBinding="{Binding Path=rating}"/>
+                        <GridViewColumn Width="70" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
                     </ui:GridView>
                 </ui:ListView.View>
                 <ListView.ItemContainerStyle>
@@ -56,9 +56,9 @@
                         Width="530">
                 <ui:ListView.View>
                     <ui:GridView x:Name="DeveloperListGridView">
-                        <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
-                        <GridViewColumn Width="Auto" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
-                        <GridViewColumn Width="Auto" Header="Game Count" DisplayMemberBinding="{Binding Path=games_count}" />
+                        <GridViewColumn Width="300" Header="Name" DisplayMemberBinding="{Binding Path=name}" />
+                        <GridViewColumn Width="120" Header="Game Count" DisplayMemberBinding="{Binding Path=games_count}" />
+                        <GridViewColumn Width="50" Header="Id" DisplayMemberBinding="{Binding Path=id}"/>
                     </ui:GridView>
                 </ui:ListView.View>
                 <ListView.ItemContainerStyle>

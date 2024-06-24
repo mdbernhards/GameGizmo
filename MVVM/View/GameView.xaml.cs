@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace GameGizmo.MVVM.View
 {
@@ -10,6 +12,12 @@ namespace GameGizmo.MVVM.View
         public GameView()
         {
             InitializeComponent();
+        }
+
+        private void Url_Click(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            e.Handled = true;
         }
     }
 }

@@ -2,7 +2,7 @@
 using GameGizmo.Core;
 using GameGizmo.Enums;
 using GameGizmo.Logic;
-using GameGizmo.Models;
+using GameGizmo.Logic.Interfaces;
 using GameGizmo.MVVM.Model;
 
 namespace GameGizmo.MVVM.ViewModel
@@ -17,7 +17,7 @@ namespace GameGizmo.MVVM.ViewModel
 
         public SearchResultsViewModel SearchResults { get; set; }
 
-        public ApiLogic ApiLogic { get; set; }
+        public IApiLogic ApiLogic { get; set; }
 
         public RelayCommand HomeViewCommand { get; set; }
 
