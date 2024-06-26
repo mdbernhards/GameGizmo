@@ -99,7 +99,7 @@ namespace GameGizmo.MVVM.ViewModel
 
             DevLastPageViewCommand = new RelayCommand<object>(x =>
             {
-                Developer.PageNumber = GetMaxPageNumber();
+                Developer.PageNumber = GetMaxPageNumber() + 1;
                 GetListPage();
             });
 
@@ -112,7 +112,7 @@ namespace GameGizmo.MVVM.ViewModel
 
         private int? GetMaxPageNumber()
         {
-            return (Developer.GameListCount / Developer.PageSize) + 1;
+            return (Developer.GameListCount / Developer.PageSize);
         }
 
         private async void GetListPage()

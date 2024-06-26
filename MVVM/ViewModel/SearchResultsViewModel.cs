@@ -39,16 +39,16 @@ namespace GameGizmo.MVVM.ViewModel
 
         public async void GetGameList(MenuType listType, string? searchText = null, bool IsNewSearch = true)
         {
+            if (IsNewSearch)
+            {
+                Search.Filters.PageNumber = 1;
+                GetFilters();
+            }
+
             ApiParameters parameters = CreateApiSearchParameters(searchText);
 
             Search.LoadingData.IsLoading = true;
             Search.IsGameListVisible = true;
-
-            if (IsNewSearch)
-            {
-                Search.Filters = new();
-                GetFilters();
-            }
 
             ListType = listType;
             Search.Filters.Parameters = parameters;
@@ -162,7 +162,7 @@ namespace GameGizmo.MVVM.ViewModel
 
         private int? GetMaxPageNumber()
         {
-            return (ListCount / Search.Filters.PageSize) + 1;
+            return (ListCount / Search.Filters.PageSize);
         }
 
         private void GetListPage()
@@ -212,7 +212,7 @@ namespace GameGizmo.MVVM.ViewModel
 
             Search.LastPageViewCommand = new RelayCommand<object>(x =>
             {
-                Search.Filters.PageNumber = GetMaxPageNumber();
+                Search.Filters.PageNumber = GetMaxPageNumber() + 1;
                 GetListPage();
             });
 
