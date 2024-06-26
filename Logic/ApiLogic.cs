@@ -17,7 +17,7 @@ namespace GameGizmo.Logic
         public ApiLogic()
         {
             GameBaseUri += Key;
-            path = new Uri(path, Key);
+            path = new(path, Key);
             Client = new();
         }
 
@@ -55,7 +55,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new GameData();
+                throw new ArgumentException("Game Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<GameData?>();
@@ -69,7 +69,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ListOfGameScreenshots();
+                throw new ArgumentException("Game Screenshot Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<ListOfGameScreenshots?>();
@@ -83,7 +83,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new DeveloperData();
+                throw new ArgumentException("Developer Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<DeveloperData?>();
@@ -104,7 +104,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ListOfDevelopers();
+                throw new ArgumentException("ListOfDevelopers Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<ListOfDevelopers?>();
@@ -119,7 +119,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ListOfPlatforms();
+                throw new ArgumentException("ListOfPlatforms Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<ListOfPlatforms?>();
@@ -134,7 +134,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ListOfStores();
+                throw new ArgumentException("ListOfStores Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<ListOfStores?>();
@@ -149,7 +149,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ListOfGenres();
+                throw new ArgumentException("ListOfGenres Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<ListOfGenres?>();
@@ -162,7 +162,7 @@ namespace GameGizmo.Logic
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ListOfGames();
+                throw new ArgumentException("ListOfGames Query " + nameof(response.IsSuccessStatusCode) + ": " + response.IsSuccessStatusCode.ToString());
             }
 
             return await response.Content.ReadAsAsync<ListOfGames?>();

@@ -1,6 +1,5 @@
 ﻿using GameGizmo.Logic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace GameGizmo
 {
@@ -14,31 +13,7 @@ namespace GameGizmo
         public MainWindow()
         {
             InitializeComponent();
-            ApiLogic = new ApiLogic();
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Close();
+            ApiLogic = new();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GameGizmo.MVVM.ViewModel
 
         public IApiToViewMapper ApiToViewMapper { get; set; }
 
-        private Search search = new Search();
+        private Search search = new();
         public Search Search
         {
             get { return search; }
@@ -24,7 +24,7 @@ namespace GameGizmo.MVVM.ViewModel
             }
         }
 
-        private GameListType ListType = GameListType.TopGamesOfAllTime;
+        private MenuType ListType = MenuType.TopGamesOfAllTime;
 
         private int? ListCount = 1;
 
@@ -37,23 +37,28 @@ namespace GameGizmo.MVVM.ViewModel
             SetUpRelayCommands();
         }
 
-        public async void GetGameList(GameListType listType, string? searchText = null, bool IsNewSearch = true)
+        public async void GetGameList(MenuType listType, string? searchText = null, bool IsNewSearch = true)
         {
             ApiParameters parameters = CreateApiSearchParameters(searchText);
 
             Search.LoadingData.IsLoading = true;
             Search.IsGameListVisible = true;
 
-            Search.Filters.PageNumber = IsNewSearch ? 1 : Search.Filters.PageNumber;
+            if (IsNewSearch)
+            {
+                Search.Filters = new();
+                GetFilters();
+            }
+
             ListType = listType;
             Search.Filters.Parameters = parameters;
 
             ListOfGames? results = listType switch
             {
-                GameListType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(parameters),
-                GameListType.NewestGames => await ApiLogic.GetNewestGames(parameters),
-                GameListType.HottestGames => await ApiLogic.GetHottestGames(parameters),
-                GameListType.Search => await ApiLogic.GetSearch(parameters),
+                MenuType.TopGamesOfAllTime => await ApiLogic.GetHighestRatedGames(parameters),
+                MenuType.UpcomingGames => await ApiLogic.GetNewestGames(parameters),
+                MenuType.HottestGames => await ApiLogic.GetHottestGames(parameters),
+                MenuType.Search => await ApiLogic.GetSearch(parameters),
                 _ => await ApiLogic.GetHighestRatedGames(parameters),
             };
 
@@ -76,7 +81,7 @@ namespace GameGizmo.MVVM.ViewModel
         {
             if (games == null || games.results == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(games) + ", " + nameof(games.results));
             }
 
             ListCount = games.count;
@@ -93,7 +98,7 @@ namespace GameGizmo.MVVM.ViewModel
         {
             if (developers == null || developers.results == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(developers) + ", " + nameof(developers.results));
             }
 
             ListCount = developers.count;
@@ -129,7 +134,7 @@ namespace GameGizmo.MVVM.ViewModel
         {
             if (Search.Filters.ReleaseRangeFrom == null && Search.Filters.ReleaseRangeTo == null)
             {
-                return string.Empty;
+                throw new ArgumentNullException(nameof(Search.Filters.ReleaseRangeFrom) + ", " + nameof(Search.Filters.ReleaseRangeTo));
             }    
 
             string? dates;
@@ -144,7 +149,7 @@ namespace GameGizmo.MVVM.ViewModel
         {
             if (Search.Filters.MetacriticScoreFrom == null && Search.Filters.MetacriticScoreTo == null)
             {
-                return string.Empty;
+                throw new ArgumentNullException(nameof(Search.Filters.MetacriticScoreFrom) + ", " + nameof(Search.Filters.MetacriticScoreTo));
             }
 
             string? scoreRange;
@@ -214,6 +219,11 @@ namespace GameGizmo.MVVM.ViewModel
             Search.FirstPageViewCommand = new RelayCommand<object>(x =>
             {
                 Search.Filters.PageNumber = 1;
+                GetListPage();
+            });
+
+            Search.ApplyFiltersViewCommand = new RelayCommand<object>(x =>
+            {
                 GetListPage();
             });
         }

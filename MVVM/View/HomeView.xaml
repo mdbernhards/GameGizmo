@@ -4,104 +4,261 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GameGizmo.MVVM.View"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <TextBlock Text="Discover"
-                   Foreground="White"
-                   FontSize="28"
-                   HorizontalAlignment="Left"
-                   Margin="0,0,0,20"
-                   FontFamily="/Fonts/#Poppins"/>
-        <StackPanel Orientation="Horizontal"
-                    Margin="0,0,0,10">
-            <Border Width="400" Height="200">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                        <GradientStop Color="#5bc3ff" Offset="0.0"/>
-                        <GradientStop Color="#3aa0ff" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-
-                <Border.Clip>
-                    <RectangleGeometry RadiusX="10"
-                                       RadiusY="10"
-                                       Rect="0,0,400,200"/>
-                </Border.Clip>
-
-                <Grid>
-                    <StackPanel>
-                        <TextBlock Text="Top Games&#x0a;All time"
-                                   Foreground="White"
-                                   FontSize="28"
-                                   Margin="20,10,10,0"
-                   FontFamily="/Fonts/#Poppins"/>
-                        <TextBlock Text="Check it out!"
-                                   Foreground="White"
-                                   FontSize="18"
-                                   Margin="20,10,10,0"
-                   FontFamily="/Fonts/#Poppins"/>
-                    </StackPanel>
-
-                    <Image Width="250"
-                           Height="250"
-                           Source="/Images/gartic.gif"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Bottom" Margin="0,0,-16,-46" RenderTransformOrigin="0.5,0.5">
-                        <Image.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="-28.098"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </Image.RenderTransform>
-                    </Image>
-                </Grid>
-            </Border>
-            <Border Width="200"
-                    Height="200"
-                    CornerRadius="10"
-                    Margin="45,0,0,0">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                        <GradientStop Color="#ffc554" Offset="0.0"/>
-                        <GradientStop Color="#ffd738" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-            </Border>
-        </StackPanel>
-        <StackPanel>
-            <StackPanel.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Margin" Value="15,0,0,0"/>
-                </Style>
-            </StackPanel.Resources>
-            <TextBlock Text="Popular Currently"
+    <Grid>
+        <ui:LoadingScreen Visibility="{Binding Home.LoadingData.LoadingVisibility}"
+                          ui:Foreground="White"
+                          BorderBrush="Aqua">
+            <TextBlock Text="Loading.."
+                       FontSize="40"/>
+        </ui:LoadingScreen>
+        <StackPanel Visibility="{Binding Home.LoadingData.ContentVisibility}">
+            <TextBlock Text="Discover"
                        Foreground="White"
-                       FontSize="20"
+                       FontSize="28"
                        HorizontalAlignment="Left"
-                       Margin="0,0,0,10"
-                   FontFamily="/Fonts/#Poppins"/>
-            <StackPanel Orientation="Horizontal">
-                <Border Width="150"
-                        Height="150"
-                        Background="#844eff"
+                       Margin="0,0,0,20"
+                       FontFamily="/Fonts/#Poppins"/>
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,0,0,10">
+                <Border Width="400" 
+                        Height="200">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                            <GradientStop Color="#5bc3ff" Offset="0.0"/>
+                            <GradientStop Color="#3aa0ff" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="10"
+                                           RadiusY="10"
+                                           Rect="0,0,400,200"/>
+                    </Border.Clip>
+
+                    <Grid MouseLeftButtonDown="Panel_MouseClick"
+                          Tag="TopGames">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                    
+                        <StackPanel>
+                            <TextBlock Text="Top Games&#x0a;All time"
+                                       Foreground="White"
+                                       FontSize="45"
+                                       Margin="20,15,10,0"
+                       FontFamily="/Fonts/#Poppins"/>
+                            <TextBlock Text="Check them out!"
+                                       Foreground="White"
+                                       FontSize="25"
+                                       Margin="20,10,10,0"
+                                   
+                       FontFamily="/Fonts/#Poppins"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Width="200"
+                        Height="200"
                         CornerRadius="10"
-                        Margin="0"/>
-                <Border Width="150"
-                        Height="150"
-                        Background="#4e99ff"
-                        CornerRadius="10"/>
-                <Border Width="150"
-                        Height="150"
-                        Background="#4eff91"
-                        CornerRadius="10"/>
-                <Border Width="150"
-                        Height="150"
-                        Background="#ecff4e"
-                        CornerRadius="10"/>
+                        Margin="45,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                            <GradientStop Color="#ffc554" Offset="0.0"/>
+                            <GradientStop Color="#ffd738" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid MouseLeftButtonDown="Panel_MouseClick"
+                          Tag="UpcomingGames">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                            <TextBlock Text="Upcoming&#x0a;Releases"
+                                       Foreground="White"
+                                       FontSize="35"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Padding="10,45,10,45"
+                                       FontFamily="/Fonts/#Poppins"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Margin" Value="15,0,0,0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="Popular Currently"
+                           Foreground="White"
+                           FontSize="20"
+                           HorizontalAlignment="Left"
+                           Margin="0,0,0,10"
+                           FontFamily="/Fonts/#Poppins"/>
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="150"
+                            Height="150"
+                            Background="#844eff"
+                            CornerRadius="10"
+                            Margin="0">
+
+                        <Border.Clip>
+                            <RectangleGeometry RadiusX="10"
+                                           RadiusY="10"
+                                           Rect="0,0,150,150"/>
+                        </Border.Clip>
+                    
+                        <Grid MouseLeftButtonDown="Panel_MouseClick"
+                              Tag="{Binding Home.GameList[0].Id}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding Home.GameList[0].BackgroundImage}"
+                                            Opacity="0.5"
+                                            Stretch="UniformToFill"/>
+                            </Grid.Background>
+
+                            <TextBlock Text="{Binding Home.GameList[0].Name}"
+                                       Foreground="White"
+                                       FontSize="20"
+                                       TextWrapping="Wrap"
+                                       Width="130"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Padding="10,45,10,45"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Width="150"
+                            Height="150"
+                            Background="#4e99ff"
+                            CornerRadius="10">
+
+                        <Border.Clip>
+                            <RectangleGeometry RadiusX="10"
+                                               RadiusY="10"
+                                               Rect="0,0,150,150"/>
+                        </Border.Clip>
+                    
+                        <Grid MouseLeftButtonDown="Panel_MouseClick"
+                              Tag="{Binding Home.GameList[1].Id}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding Home.GameList[1].BackgroundImage}"
+                                            Opacity="0.5"
+                                            Stretch="UniformToFill"/>
+                            </Grid.Background>
+
+                            <TextBlock Text="{Binding Home.GameList[1].Name}"
+                                       Foreground="White"
+                                       FontSize="20"
+                                       TextWrapping="Wrap"
+                                       Width="130"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Padding="10,45,10,45"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </Grid>
+                    </Border>
+                
+                    <Border Width="150"
+                            Height="150"
+                            Background="#4eff91"
+                            CornerRadius="10">
+
+                        <Border.Clip>
+                            <RectangleGeometry RadiusX="10"
+                                               RadiusY="10"
+                                               Rect="0,0,150,150"/>
+                        </Border.Clip>
+                    
+                        <Grid MouseLeftButtonDown="Panel_MouseClick"
+                              Tag="{Binding Home.GameList[2].Id}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding Home.GameList[2].BackgroundImage}"
+                                            Opacity="0.5"
+                                            Stretch="UniformToFill"/>
+                            </Grid.Background>
+
+                            <TextBlock Text="{Binding Home.GameList[2].Name}"
+                                       Foreground="White"
+                                       FontSize="20"
+                                       TextWrapping="Wrap"
+                                       Width="130"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Padding="10,45,10,45"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </Grid>
+                    </Border>
+                
+                    <Border Width="150"
+                            Height="150"
+                            Background="#f55e51"
+                            CornerRadius="10">
+
+                        <Border.Clip>
+                            <RectangleGeometry RadiusX="10"
+                                               RadiusY="10"
+                                               Rect="0,0,150,150"/>
+                        </Border.Clip>
+                    
+                        <Grid MouseLeftButtonDown="Panel_MouseClick"
+                              Tag="{Binding Home.GameList[3].Id}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding Home.GameList[3].BackgroundImage}"
+                                            Opacity="0.5"
+                                            Stretch="UniformToFill"/>
+                            </Grid.Background>
+
+                            <TextBlock Text="{Binding Home.GameList[3].Name}"
+                                       Foreground="White"
+                                       FontSize="20"
+                                       TextWrapping="Wrap"
+                                       Width="130"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Padding="10,45,10,45"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </UserControl>

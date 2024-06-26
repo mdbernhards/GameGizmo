@@ -66,7 +66,7 @@ namespace GameGizmo.Models
             }
         }
 
-        public DateTime? ReleaseRangeFrom { get; set; } = new DateTime(1980, 1, 1);
+        public DateTime? ReleaseRangeFrom { get; set; } = new(1980, 1, 1);
 
         public DateTime? ReleaseRangeTo { get; set; } = DateTime.Today;
 

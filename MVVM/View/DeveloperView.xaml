@@ -23,7 +23,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="260"/>
+            <RowDefinition Height="220"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -74,6 +74,69 @@
                         Width="240"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"/>
+
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="1"
+                        Grid.Row="2">
+                <ui:ListView Name="GameListView" 
+                        ItemsSource="{Binding Developer.GameList}"
+                        Width="445"
+                             Height="140">
+                    <ui:ListView.View>
+                        <ui:GridView x:Name="GameListGridView">
+                            <GridViewColumn Width="220" Header="Name" DisplayMemberBinding="{Binding Path=Name}" />
+                            <GridViewColumn Width="100" Header="Released" DisplayMemberBinding="{Binding Path=Released}" />
+                            <GridViewColumn Width="80" Header="Metacritic" DisplayMemberBinding="{Binding Path=Metacritic}" />
+                        </ui:GridView>
+                    </ui:ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Foreground" Value="White"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="DarkGoldenrod"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ui:ListView>
+
+
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Grid.Row="1">
+                    <ui:Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&lt;&lt;"
+                        Command="{Binding Developer.FirstPageViewCommand}"></ui:Button>
+                    <Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&lt;"
+                        Command="{Binding Developer.PreviousPageViewCommand}"></Button>
+
+                    <TextBlock Text="{Binding Developer.PageNumber}"
+                           FontSize="15"
+                           Margin="12"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+
+                    <Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&gt;"
+                        Command="{Binding Developer.NextPageViewCommand}"></Button>
+                    <Button Height="30"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Content="&gt;&gt;"
+                        Command="{Binding Developer.LastPageViewCommand}"></Button>
+                </StackPanel>
+
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

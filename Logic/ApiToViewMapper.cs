@@ -43,9 +43,17 @@ namespace GameGizmo.Logic
                 Name = developerData.name,
                 Id = developerData.id,
                 ImageBackground = developerData.image_background,
-                Games = games.results,
                 GameListCount = games.count,
             };
+
+            var gameList = MapToGame(games.results ?? []);
+            developer.GameList = [];
+
+            for (int i = 0; i < gameList?.Count; i++)
+            {
+                var game = gameList[i];
+                developer.GameList.Add(game);
+            }    
 
             return developer;
         }
@@ -60,10 +68,7 @@ namespace GameGizmo.Logic
 
         private string SetPlatforms(List<GamePlatforms>? platforms)
         {
-            if (platforms == null)
-            {
-                return string.Empty;
-            }
+            ArgumentNullException.ThrowIfNull(platforms);
 
             var platformString = string.Empty;
             foreach (GamePlatforms platform in platforms)

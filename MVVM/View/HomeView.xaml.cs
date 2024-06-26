@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace GameGizmo.MVVM.View
 {
@@ -10,6 +12,13 @@ namespace GameGizmo.MVVM.View
         public HomeView()
         {
             InitializeComponent();
+        }
+
+        private void Panel_MouseClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = ((Grid)sender);
+
+            WeakReferenceMessenger.Default.Send(item);
         }
     }
 }

@@ -85,9 +85,11 @@ namespace GameGizmo.MVVM.Model
 
         public RelayCommand<object>? PreviousPageViewCommand { get; set; }
 
-        public Filters Filters { get; set; } = new Filters();
+        public RelayCommand<object>? ApplyFiltersViewCommand { get; set; }
+
+        public Filters Filters { get; set; } = new();
 
 
-        public LoadingData LoadingData { get; set; } = new LoadingData();
+        public LoadingData LoadingData { get; set; } = new();
     }
 }

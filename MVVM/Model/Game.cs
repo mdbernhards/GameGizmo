@@ -6,7 +6,7 @@ namespace GameGizmo.MVVM.Model
     {
         public int? Id { get; set; }
 
-        public string? Name { get; set; }
+        public string? Name { get; set; } = "Error";
 
         public string? Description { get; set; }
 
@@ -26,22 +26,6 @@ namespace GameGizmo.MVVM.Model
 
         public List<GameScreenshot>? GameScreenshots { get; set; }
 
-        public LoadingData LoadingData { get; set; } = new LoadingData();
-
-        /*
-        private List<GameScreenshot>? gameScreenshots;
-        public List<GameScreenshot>? GameScreenshots
-        {
-            get { return gameScreenshots; }
-            set
-            {
-                if (!Equals(gameScreenshots, value))
-                {
-                    gameScreenshots = value;
-
-                    OnPropertyChanged();
-                }
-            }
-        }*/
+        public LoadingData LoadingData { get; set; } = new();
     }
 }

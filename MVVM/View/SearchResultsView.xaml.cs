@@ -18,28 +18,32 @@ namespace GameGizmo.MVVM.View
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var item = ((ListViewItem)sender).Content;
+            var listViewObject = ((ListViewItem)sender).Content;
 
-            if (item is Game game)
+            if (listViewObject is Game game)
             {
                 if (DataContext is SearchResultsViewModel vm)
                 {
                     vm.Search.SelectedGame = game;
                 }
             }
-            else if (item is Developer developer)
+            else if (listViewObject is Developer developer)
             {
                 if (DataContext is SearchResultsViewModel vm)
                 {
                     vm.Search.SelectedDeveloper = developer;
                 }
             }
+            else
+            {
+                throw new ArgumentException(nameof(listViewObject));
+            }
 
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
     }
