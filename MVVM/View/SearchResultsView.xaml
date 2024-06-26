@@ -230,6 +230,7 @@
                             FontSize="13"
                             Margin="0,15,0,10"
                             FontFamily="/Fonts/#Poppins"/>
+                    <!--  PreviewTextInput="NumberValidationTextBox" is taken from https://stackoverflow.com/questions/1268552/how-do-i-get-a-textbox-to-only-accept-numeric-input-in-wpf read more in the README.MD -->
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0,0,10,0">

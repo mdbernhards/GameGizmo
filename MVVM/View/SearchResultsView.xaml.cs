@@ -1,5 +1,6 @@
 ﻿using GameGizmo.MVVM.Model;
 using GameGizmo.MVVM.ViewModel;
+using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -40,7 +41,8 @@ namespace GameGizmo.MVVM.View
             }
 
         }
-
+        
+        // taken from https://stackoverflow.com/questions/1268552/how-do-i-get-a-textbox-to-only-accept-numeric-input-in-wpf read more in the README.MD
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new("[^0-9]+");

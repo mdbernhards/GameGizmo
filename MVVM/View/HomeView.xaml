@@ -7,6 +7,8 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <!-- Source of text and panel/border placement and design https://www.youtube.com/watch?v=PzP8mw7JUzI read more in the README.MD -->
+    <!-- This source is in a lot of places, but it only covers the UI part, almost all logic is self made -->
     <Grid>
         <ui:LoadingScreen Visibility="{Binding Home.LoadingData.LoadingVisibility}"
                           ui:Foreground="White"
