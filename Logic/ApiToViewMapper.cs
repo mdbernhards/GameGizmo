@@ -68,7 +68,10 @@ namespace GameGizmo.Logic
 
         private string SetPlatforms(List<GamePlatforms>? platforms)
         {
-            ArgumentNullException.ThrowIfNull(platforms);
+            if (platforms == null || platforms.Count == 0)
+            {
+                return string.Empty;
+            }
 
             var platformString = string.Empty;
             foreach (GamePlatforms platform in platforms)

@@ -89,7 +89,6 @@ namespace GameGizmo.MVVM.Model
 
         public Filters Filters { get; set; } = new();
 
-
         public LoadingData LoadingData { get; set; } = new();
     }
 }

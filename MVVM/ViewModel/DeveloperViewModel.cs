@@ -7,11 +7,19 @@ using System.Text.RegularExpressions;
 
 namespace GameGizmo.MVVM.ViewModel
 {
-    internal class DeveloperViewModel(IApiLogic apiLogic, IApiToViewMapper apiToViewMapper) : ObservableObject
+    internal class DeveloperViewModel : ObservableObject
     {
-        public IApiLogic ApiLogic { get; set; } = apiLogic;
+        public IApiLogic ApiLogic { get; set; }
 
-        public IApiToViewMapper ApiToViewMapper { get; set; } = apiToViewMapper;
+        public IApiToViewMapper ApiToViewMapper { get; set; }
+
+        public RelayCommand<object>? DevNextPageViewCommand { get; set; }
+
+        public RelayCommand<object>? DevLastPageViewCommand { get; set; }
+
+        public RelayCommand<object>? DevFirstPageViewCommand { get; set; }
+
+        public RelayCommand<object>? DevPreviousPageViewCommand { get; set; }
 
         private Developer developer = new();
         public Developer Developer
@@ -19,26 +27,30 @@ namespace GameGizmo.MVVM.ViewModel
             get { return developer; }
             set
             {
-                if (!string.Equals(developer, value))
+                developer = value;
+
+                if (developer != null)
                 {
-                    developer = value;
-
-                    if (developer != null)
+                    if (developer.Description == null || developer.Description == string.Empty)
                     {
-                        if (developer.Description == null || developer.Description == string.Empty)
-                        {
-                            developer.Description = "No description found!";
-                        }
-                        else
-                        {
-                            developer.Description = Regex.Replace(developer.Description, @"<[^>]*>", String.Empty);
-                        }
-
-
-                        OnPropertyChanged();
+                        developer.Description = "No description found!";
                     }
+                    else
+                    {
+                        developer.Description = Regex.Replace(developer.Description, @"<[^>]*>", String.Empty);
+                    }
+
+                    OnPropertyChanged();
                 }
             }
+        }
+
+        public DeveloperViewModel(IApiLogic apiLogic, IApiToViewMapper apiToViewMapper)
+        {
+            ApiLogic = apiLogic;
+            ApiToViewMapper = apiToViewMapper;
+
+            SetUpRelayCommands();
         }
 
         public async void GetDeveloperView(int? developerId)
@@ -65,7 +77,7 @@ namespace GameGizmo.MVVM.ViewModel
 
         private void SetUpRelayCommands()
         {
-            Developer.NextPageViewCommand = new RelayCommand<object>(x =>
+            DevNextPageViewCommand = new RelayCommand<object>(x =>
             {
                 if (GetMaxPageNumber() >= Developer.PageNumber)
                 {
@@ -75,7 +87,7 @@ namespace GameGizmo.MVVM.ViewModel
                 GetListPage();
             });
 
-            Developer.PreviousPageViewCommand = new RelayCommand<object>(x =>
+            DevPreviousPageViewCommand = new RelayCommand<object>(x =>
             {
                 if (Developer.PageNumber > 1)
                 {
@@ -85,13 +97,13 @@ namespace GameGizmo.MVVM.ViewModel
                 GetListPage();
             });
 
-            Developer.LastPageViewCommand = new RelayCommand<object>(x =>
+            DevLastPageViewCommand = new RelayCommand<object>(x =>
             {
                 Developer.PageNumber = GetMaxPageNumber();
                 GetListPage();
             });
 
-            Developer.FirstPageViewCommand = new RelayCommand<object>(x =>
+            DevFirstPageViewCommand = new RelayCommand<object>(x =>
             {
                 Developer.PageNumber = 1;
                 GetListPage();
@@ -119,13 +131,13 @@ namespace GameGizmo.MVVM.ViewModel
             }
 
             var gameList = ApiToViewMapper.MapToGame(tempGameDatalist);
-            developer.GameList = [];
+            Developer.GameList = [];
 
-
+            Developer.GameList.Clear();
             for (int i = 0; i < gameList?.Count; i++)
             {
                 var game = gameList[i];
-                developer.GameList.Add(game);
+                Developer.GameList.Add(game);
             }
         }
     }

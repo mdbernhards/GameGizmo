@@ -261,11 +261,11 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Grid.Row="1">
-                <ui:Button Height="30"
+                <Button Height="30"
                         Width="45"
                         Margin="6,0,6,0"
                         Content="&lt;&lt;"
-                        Command="{Binding Search.FirstPageViewCommand}"></ui:Button>
+                        Command="{Binding Search.FirstPageViewCommand}"></Button>
                 <Button Height="30"
                         Width="45"
                         Margin="6,0,6,0"

@@ -18,19 +18,21 @@ namespace GameGizmo.MVVM.Model
 
         public string? Description { get; set; }
 
-        public ObservableCollection<Game>? GameList { get; set; }
-
         public int? GameListCount { get; set; }
 
+        private ObservableCollection<Game> gameList { get; set; } = [];
+
+        public ObservableCollection<Game> GameList
+        {
+            get => gameList;
+            set
+            {
+                gameList = value;
+                OnPropertyChanged();
+            }
+        }
+
         public LoadingData LoadingData { get; set; } = new();
-
-        public RelayCommand<object>? NextPageViewCommand { get; set; }
-
-        public RelayCommand<object>? LastPageViewCommand { get; set; }
-
-        public RelayCommand<object>? FirstPageViewCommand { get; set; }
-
-        public RelayCommand<object>? PreviousPageViewCommand { get; set; }
 
         private int? pageNumber = 1;
         public int? PageNumber
